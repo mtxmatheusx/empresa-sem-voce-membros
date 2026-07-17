@@ -1,0 +1,83 @@
+import { redirect } from "next/navigation";
+import { createClient } from "@/lib/supabase/server";
+import { MembrosShell } from "@/components/membros/MembrosShell";
+import { Client, CLIENT_STATUS_LABELS, PILLAR_INFO } from "@/types/client";
+import { LogoutButton } from "@/components/membros/LogoutButton";
+import { formatDate } from "@/lib/utils";
+
+export const dynamic = "force-dynamic";
+
+export default async function PerfilPage() {
+  const supabase = await createClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+  if (!user) redirect("/membros/login");
+
+  const { data: client } = await supabase
+    .from("clients")
+    .select("*")
+    .eq("email", user.email)
+    .maybeSingle();
+
+  if (!client) redirect("/membros/dashboard");
+
+  const typedClient = client as Client;
+  const pillar = PILLAR_INFO[typedClient.current_pillar];
+
+  return (
+    <MembrosShell>
+      <div className="px-6 md:px-10 py-12 max-w-[900px]">
+        <header className="mb-12">
+          <p className="t-eyebrow">Sua conta</p>
+          <h1 className="t-h1 mt-3 text-[#0F0E0C]">Perfil</h1>
+        </header>
+
+        <div className="card-elevated p-8 md:p-10 mb-10">
+          <div className="grid sm:grid-cols-2 gap-x-8 gap-y-6">
+            <Field label="Nome" value={typedClient.name} />
+            <Field label="Email" value={typedClient.email} />
+            <Field label="WhatsApp" value={typedClient.whatsapp || "—"} />
+            <Field
+              label="Status no programa"
+              value={CLIENT_STATUS_LABELS[typedClient.status]}
+            />
+            <Field
+              label="Início"
+              value={formatDate(typedClient.started_at)}
+            />
+            <Field
+              label="Pilar atual"
+              value={`${typedClient.current_pillar}. ${pillar?.name ?? "—"}`}
+            />
+            <Field
+              label="Progresso geral"
+              value={`${typedClient.completion_pct}%`}
+            />
+            {typedClient.ends_at && (
+              <Field label="Conclusão prevista" value={formatDate(typedClient.ends_at)} />
+            )}
+          </div>
+        </div>
+
+        <div className="card-elevated p-8">
+          <p className="t-eyebrow mb-4">Sessão</p>
+          <p className="text-[14px] text-[#6B6862] leading-relaxed mb-6 max-w-xl">
+            Pra atualizar dados de cadastro, me chama no WhatsApp direto. Por
+            enquanto, o painel é só leitura.
+          </p>
+          <LogoutButton />
+        </div>
+      </div>
+    </MembrosShell>
+  );
+}
+
+function Field({ label, value }: { label: string; value: string }) {
+  return (
+    <div>
+      <p className="t-label mb-2">{label}</p>
+      <p className="text-[15px] text-[#0F0E0C] tracking-[-0.01em]">{value}</p>
+    </div>
+  );
+}
