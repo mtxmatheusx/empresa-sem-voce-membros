@@ -8,6 +8,7 @@ const DASHBOARD_HOSTS = [
 
 const MEMBERS_HOSTS = [
   "membros.mtxestrategia.com.br",
+  "empresa-sem-voce-membros.mtxestrategia.com.br",
 ];
 
 export async function middleware(request: NextRequest) {
