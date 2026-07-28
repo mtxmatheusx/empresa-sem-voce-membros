@@ -24,7 +24,10 @@ const fraunces = Fraunces({
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://empresa-sem-voce.mtxestrategia.com.br"),
-  title: "Programa Empresa Sem Você — Mentoria de Matheus Martins",
+  title: {
+    default: "Empresa Sem Você · Área de Membros",
+    template: "%s · Empresa Sem Você",
+  },
   description:
     "Em 120 dias, donos de PME migram do operacional tático ao estratégico. Mentoria 1:1 com Matheus Martins.",
   applicationName: "Programa Empresa Sem Você",
