@@ -12,7 +12,7 @@ import {
   Eye,
   EyeOff,
   Upload,
-  Youtube,
+  Play,
   X,
 } from "lucide-react";
 
@@ -212,7 +212,7 @@ export function LessonManager({ initialLessons }: { initialLessons: Lesson[] }) 
                         {l.title}
                       </span>
                       {isYoutube(l.video_url) && (
-                        <Youtube size={15} className="text-[#C9A227] shrink-0" />
+                        <Play size={13} className="text-[#C9A227] shrink-0" fill="#C9A227" />
                       )}
                       {l.is_locked && <Lock size={13} className="text-[#6E6E6E] shrink-0" />}
                       {l.is_published ? (
