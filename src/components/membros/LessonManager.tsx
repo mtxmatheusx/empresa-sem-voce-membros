@@ -24,7 +24,7 @@ type Form = {
   video_url: string;
   description: string;
   task: string;
-  pdf_url: string;
+  documents: string[];
   cover_url: string;
   is_published: boolean;
   is_locked: boolean;
@@ -38,7 +38,7 @@ const EMPTY: Form = {
   video_url: "",
   description: "",
   task: "",
-  pdf_url: "",
+  documents: [],
   cover_url: "",
   is_published: true,
   is_locked: false,
@@ -82,7 +82,9 @@ export function LessonManager({ initialLessons }: { initialLessons: Lesson[] }) 
       video_url: l.video_url ?? "",
       description: l.description ?? "",
       task: l.task ?? "",
-      pdf_url: l.pdf_url ?? "",
+      documents: [l.pdf_url, ...(l.templates_urls ?? [])].filter(
+        (u): u is string => !!u && u.trim().length > 0
+      ),
       cover_url: l.cover_url ?? "",
       is_published: l.is_published,
       is_locked: l.is_locked,
@@ -123,7 +125,8 @@ export function LessonManager({ initialLessons }: { initialLessons: Lesson[] }) 
       video_url: form.video_url.trim() || null,
       description: form.description.trim() || null,
       task: form.task.trim() || null,
-      pdf_url: form.pdf_url.trim() || null,
+      pdf_url: null,
+      templates_urls: form.documents.map((d) => d.trim()).filter(Boolean),
       cover_url: form.cover_url.trim() || null,
       is_published: form.is_published,
       is_locked: form.is_locked,
@@ -385,13 +388,50 @@ export function LessonManager({ initialLessons }: { initialLessons: Lesson[] }) 
               </div>
 
               <div>
-                <label className="t-label block mb-2">Link de documento (PDF/planilha) — opcional</label>
-                <input
-                  className="esv-input"
-                  value={form.pdf_url}
-                  onChange={(e) => setForm((f) => ({ ...f, pdf_url: e.target.value }))}
-                  placeholder="https://…"
-                />
+                <label className="t-label block mb-2">
+                  Documentos (PDF, planilha, Google Docs…) — opcional
+                </label>
+                <div className="space-y-2">
+                  {form.documents.map((doc, i) => (
+                    <div key={i} className="flex items-center gap-2">
+                      <input
+                        className="esv-input"
+                        value={doc}
+                        onChange={(e) =>
+                          setForm((f) => ({
+                            ...f,
+                            documents: f.documents.map((d, idx) =>
+                              idx === i ? e.target.value : d
+                            ),
+                          }))
+                        }
+                        placeholder="https://… (link do arquivo)"
+                      />
+                      <button
+                        type="button"
+                        onClick={() =>
+                          setForm((f) => ({
+                            ...f,
+                            documents: f.documents.filter((_, idx) => idx !== i),
+                          }))
+                        }
+                        className="text-[#A0A0A0] hover:text-[#E0736B] p-2 shrink-0"
+                        title="Remover documento"
+                      >
+                        <X size={16} />
+                      </button>
+                    </div>
+                  ))}
+                  <button
+                    type="button"
+                    onClick={() =>
+                      setForm((f) => ({ ...f, documents: [...f.documents, ""] }))
+                    }
+                    className="inline-flex items-center gap-2 text-[13px] text-[#C9A227] hover:opacity-70 pt-1"
+                  >
+                    <Plus size={14} /> Adicionar documento
+                  </button>
+                </div>
               </div>
 
               <div className="flex items-center gap-6 pt-1">
