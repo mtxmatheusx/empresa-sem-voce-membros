@@ -23,7 +23,7 @@ export default async function AlunosPage() {
 
   return (
     <MembrosShell>
-      <div className="px-6 md:px-10 py-10 max-w-[1000px] relative">
+      <div className="px-6 md:px-10 py-10 max-w-[720px] relative">
         <div className="esv-aura" />
         <header className="mb-8 relative">
           <p className="t-eyebrow">Administração · só você</p>

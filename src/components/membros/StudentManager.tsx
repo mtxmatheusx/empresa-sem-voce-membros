@@ -140,11 +140,12 @@ export function StudentManager({ initial }: { initial: Client[] }) {
               />
             </div>
           </div>
-          <div className="grid md:grid-cols-2 gap-4">
+          <div className="flex flex-wrap gap-4">
             <div>
               <label className="t-label block mb-2">Tempo de acesso</label>
               <select
                 className="esv-input"
+                style={{ width: 150 }}
                 value={months}
                 onChange={(e) => setMonths(Number(e.target.value))}
               >
@@ -158,6 +159,7 @@ export function StudentManager({ initial }: { initial: Client[] }) {
               <label className="t-label block mb-2">Pilar inicial</label>
               <select
                 className="esv-input"
+                style={{ width: 240 }}
                 value={pillar}
                 onChange={(e) => setPillar(Number(e.target.value))}
               >
