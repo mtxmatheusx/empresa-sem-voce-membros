@@ -1,26 +1,40 @@
 "use client";
 
+import { useEffect, useState } from "react";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
 import { Logo } from "@/components/ui/logo";
 import {
   LayoutDashboard,
-  BookOpen,
+  Clapperboard,
   User,
   LogOut,
+  SlidersHorizontal,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 const NAV = [
-  { href: "/membros/dashboard", label: "Dashboard", icon: LayoutDashboard },
-  { href: "/membros/pilares", label: "Pilares", icon: BookOpen },
+  { href: "/membros/dashboard", label: "Início", icon: LayoutDashboard },
+  { href: "/membros/aulas", label: "Aulas", icon: Clapperboard },
   { href: "/membros/perfil", label: "Perfil", icon: User },
 ];
+
+const ADMIN_ITEM = {
+  href: "/membros/gerenciar",
+  label: "Gerenciar",
+  icon: SlidersHorizontal,
+};
 
 export function MembrosShell({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
   const router = useRouter();
+  const [isAdmin, setIsAdmin] = useState(false);
+
+  useEffect(() => {
+    const supabase = createClient();
+    supabase.rpc("esv_is_admin").then(({ data }) => setIsAdmin(data === true));
+  }, []);
 
   async function logout() {
     const supabase = createClient();
@@ -29,9 +43,23 @@ export function MembrosShell({ children }: { children: React.ReactNode }) {
     router.refresh();
   }
 
+  const items = isAdmin ? [...NAV, ADMIN_ITEM] : NAV;
+
+  const isActive = (href: string) =>
+    href === "/membros/dashboard"
+      ? pathname === href
+      : pathname?.startsWith(href);
+
   return (
-    <div className="min-h-screen flex relative bg-[#FAFAF7]">
-      <aside className="w-72 border-r border-[#EAE6DC] bg-[#FFFFFF] flex-col fixed inset-y-0 left-0 z-30 hidden md:flex">
+    <div className="min-h-screen flex relative" style={{ background: "var(--color-bg)" }}>
+      {/* Sidebar desktop */}
+      <aside
+        className="w-64 flex-col fixed inset-y-0 left-0 z-30 hidden md:flex"
+        style={{
+          background: "rgba(255,255,255,0.02)",
+          borderRight: "1px solid var(--color-border)",
+        }}
+      >
         <div className="px-7 pt-8 pb-8">
           <Link href="/membros/dashboard" className="hover:opacity-80 transition-opacity">
             <Logo size="sm" />
@@ -43,11 +71,8 @@ export function MembrosShell({ children }: { children: React.ReactNode }) {
         </div>
 
         <nav className="px-4 space-y-1 mb-6">
-          {NAV.map((item) => {
-            const active =
-              item.href === "/membros/dashboard"
-                ? pathname === item.href
-                : pathname?.startsWith(item.href);
+          {items.map((item) => {
+            const active = isActive(item.href);
             const Icon = item.icon;
             return (
               <Link
@@ -55,10 +80,13 @@ export function MembrosShell({ children }: { children: React.ReactNode }) {
                 href={item.href}
                 className={cn(
                   "flex items-center gap-3 px-3.5 py-2.5 text-[14px] font-medium tracking-[-0.01em] rounded-lg transition-all duration-300",
-                  active
-                    ? "bg-[#F0E8D0] text-[#B8902A]"
-                    : "text-[#6B6862] hover:text-[#0F0E0C] hover:bg-[#FAFAF7]"
+                  active ? "text-[#0C0C0C]" : "text-[#A0A0A0] hover:text-[#F5F5F5]"
                 )}
+                style={
+                  active
+                    ? { background: "linear-gradient(135deg,#C9A227,#D4AF37)" }
+                    : undefined
+                }
               >
                 <Icon size={16} strokeWidth={1.75} />
                 {item.label}
@@ -69,10 +97,13 @@ export function MembrosShell({ children }: { children: React.ReactNode }) {
 
         <div className="flex-1" />
 
-        <div className="px-4 pb-6 pt-3 border-t border-[#EAE6DC] mx-4">
+        <div
+          className="px-4 pb-6 pt-3 mx-4"
+          style={{ borderTop: "1px solid var(--color-border)" }}
+        >
           <button
             onClick={logout}
-            className="w-full flex items-center gap-3 px-3.5 py-2.5 text-[13px] text-[#A09C92] hover:text-[#0F0E0C] hover:bg-[#FAFAF7] rounded-lg transition-all duration-300 cursor-pointer"
+            className="w-full flex items-center gap-3 px-3.5 py-2.5 text-[13px] text-[#6E6E6E] hover:text-[#F5F5F5] rounded-lg transition-all duration-300 cursor-pointer"
           >
             <LogOut size={14} strokeWidth={1.75} />
             Sair
@@ -80,16 +111,23 @@ export function MembrosShell({ children }: { children: React.ReactNode }) {
         </div>
       </aside>
 
-      <main className="flex-1 md:ml-72 overflow-auto pb-20 md:pb-0">{children}</main>
+      <main className="flex-1 md:ml-64 overflow-auto pb-24 md:pb-0">{children}</main>
 
       {/* Mobile bottom nav */}
-      <nav className="md:hidden fixed bottom-0 inset-x-0 z-40 border-t border-[#EAE6DC] bg-white">
-        <div className="grid grid-cols-4">
-          {NAV.map((item) => {
-            const active =
-              item.href === "/membros/dashboard"
-                ? pathname === item.href
-                : pathname?.startsWith(item.href);
+      <nav
+        className="md:hidden fixed bottom-0 inset-x-0 z-40"
+        style={{
+          background: "rgba(12,12,12,0.95)",
+          borderTop: "1px solid var(--color-border)",
+          backdropFilter: "blur(12px)",
+        }}
+      >
+        <div
+          className="grid"
+          style={{ gridTemplateColumns: `repeat(${items.length + 1}, 1fr)` }}
+        >
+          {items.map((item) => {
+            const active = isActive(item.href);
             const Icon = item.icon;
             return (
               <Link
@@ -97,7 +135,7 @@ export function MembrosShell({ children }: { children: React.ReactNode }) {
                 href={item.href}
                 className={cn(
                   "flex flex-col items-center justify-center gap-1 py-3 text-[10px] tracking-[0.05em] uppercase transition-colors",
-                  active ? "text-[#B8902A]" : "text-[#6B6862]"
+                  active ? "text-[#C9A227]" : "text-[#A0A0A0]"
                 )}
               >
                 <Icon size={18} strokeWidth={1.75} />
@@ -107,7 +145,7 @@ export function MembrosShell({ children }: { children: React.ReactNode }) {
           })}
           <button
             onClick={logout}
-            className="flex flex-col items-center justify-center gap-1 py-3 text-[10px] tracking-[0.05em] uppercase text-[#A09C92] cursor-pointer"
+            className="flex flex-col items-center justify-center gap-1 py-3 text-[10px] tracking-[0.05em] uppercase text-[#6E6E6E] cursor-pointer"
           >
             <LogOut size={18} strokeWidth={1.75} />
             Sair

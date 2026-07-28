@@ -28,6 +28,10 @@ export interface Lesson {
   pdf_url: string | null;
   templates_urls: string[];
   is_published: boolean;
+  // extensões ESV (área de membros)
+  cover_url: string | null;
+  task: string | null;
+  is_locked: boolean;
   created_at: string;
   updated_at: string;
 }

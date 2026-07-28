@@ -6,32 +6,44 @@ interface LogoProps {
   className?: string;
 }
 
-export function Logo({ size = "md", showText = true, className }: LogoProps) {
-  const sizes = {
-    sm: { letter: "text-[34px]", name: "text-[11px]", role: "text-[9px]" },
-    md: { letter: "text-[56px]", name: "text-[13px]", role: "text-[10px]" },
-    lg: { letter: "text-[88px]", name: "text-[15px]", role: "text-[11px]" },
-    xl: { letter: "text-[128px]", name: "text-[17px]", role: "text-[12px]" },
-  };
+const PX = { sm: 32, md: 46, lg: 66, xl: 100 } as const;
+const NAME = {
+  sm: "text-[11px]",
+  md: "text-[13px]",
+  lg: "text-[15px]",
+  xl: "text-[17px]",
+} as const;
+const ROLE = {
+  sm: "text-[9px]",
+  md: "text-[10px]",
+  lg: "text-[11px]",
+  xl: "text-[12px]",
+} as const;
 
+export function Logo({ size = "md", showText = true, className }: LogoProps) {
+  const px = PX[size];
   return (
     <div className={cn("inline-flex items-center gap-3", className)}>
-      <span className={cn("logo-m", sizes[size].letter)}>M</span>
+      {/* eslint-disable-next-line @next/next/no-img-element */}
+      <img
+        src="/logo-esv.png"
+        alt="Empresa Sem Você"
+        width={px}
+        height={px}
+        style={{ width: px, height: px }}
+        className="object-contain shrink-0"
+      />
       {showText && (
         <div className="flex flex-col leading-none gap-1.5">
           <span
-            className={cn(
-              "font-serif italic text-[#0F0E0C] tracking-tight",
-              sizes[size].name
-            )}
+            className={cn("font-serif italic tracking-tight", NAME[size])}
+            style={{ color: "var(--color-text)" }}
           >
             Matheus Martins
           </span>
           <span
-            className={cn(
-              "font-sans text-[#A09C92] uppercase tracking-[0.18em]",
-              sizes[size].role
-            )}
+            className={cn("font-sans uppercase tracking-[0.18em]", ROLE[size])}
+            style={{ color: "var(--color-text-faint)" }}
           >
             Estrategista do Dono
           </span>
