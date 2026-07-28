@@ -11,6 +11,7 @@ import {
   User,
   LogOut,
   SlidersHorizontal,
+  Users,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 
@@ -20,11 +21,10 @@ const NAV = [
   { href: "/membros/perfil", label: "Perfil", icon: User },
 ];
 
-const ADMIN_ITEM = {
-  href: "/membros/gerenciar",
-  label: "Gerenciar",
-  icon: SlidersHorizontal,
-};
+const ADMIN_ITEMS = [
+  { href: "/membros/gerenciar", label: "Gerenciar", icon: SlidersHorizontal },
+  { href: "/membros/alunos", label: "Alunos", icon: Users },
+];
 
 export function MembrosShell({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
@@ -43,7 +43,7 @@ export function MembrosShell({ children }: { children: React.ReactNode }) {
     router.refresh();
   }
 
-  const items = isAdmin ? [...NAV, ADMIN_ITEM] : NAV;
+  const items = isAdmin ? [...NAV, ...ADMIN_ITEMS] : NAV;
 
   const isActive = (href: string) =>
     href === "/membros/dashboard"

@@ -34,7 +34,8 @@ export default function MembrosLandingPage() {
           <div className="mt-16 anim-fade-up delay-500">
             <p className="t-label mb-3">Já é cliente?</p>
             <p className="text-[14px] leading-[1.6] text-[#A0A0A0] max-w-md mb-5">
-              Use o email cadastrado pra receber seu link de acesso. Sem senha.
+              Entre com seu e-mail e senha. Primeiro acesso? Defina sua senha na tela
+              de login.
             </p>
             <a
               href="/membros/login"
