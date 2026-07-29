@@ -3,6 +3,7 @@ import { createClient } from "@/lib/supabase/server";
 import { MembrosShell } from "@/components/membros/MembrosShell";
 import { Client, CLIENT_STATUS_LABELS, PILLAR_INFO } from "@/types/client";
 import { LogoutButton } from "@/components/membros/LogoutButton";
+import { ChangePassword } from "@/components/membros/ChangePassword";
 import { formatDate } from "@/lib/utils";
 
 export const dynamic = "force-dynamic";
@@ -58,11 +59,14 @@ export default async function PerfilPage() {
           </div>
         </div>
 
+        <div className="card-elevated p-8 relative mb-8">
+          <ChangePassword />
+        </div>
+
         <div className="card-elevated p-8 relative">
           <p className="t-eyebrow mb-4">Sessão</p>
           <p className="text-[14px] text-[#A0A0A0] leading-relaxed mb-6 max-w-xl">
-            Pra atualizar dados de cadastro, me chama no WhatsApp direto. Por
-            enquanto, o painel é só leitura.
+            Pra atualizar seus dados de cadastro, chama o time no WhatsApp.
           </p>
           <LogoutButton />
         </div>
