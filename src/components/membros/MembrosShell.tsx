@@ -12,6 +12,7 @@ import {
   LogOut,
   SlidersHorizontal,
   Users,
+  Activity,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 
@@ -24,6 +25,7 @@ const NAV = [
 const ADMIN_ITEMS = [
   { href: "/membros/gerenciar", label: "Gerenciar", icon: SlidersHorizontal },
   { href: "/membros/alunos", label: "Alunos", icon: Users },
+  { href: "/membros/progresso", label: "Progresso", icon: Activity },
 ];
 
 export function MembrosShell({ children }: { children: React.ReactNode }) {
