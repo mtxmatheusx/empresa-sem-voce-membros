@@ -1,11 +1,11 @@
 import Link from "next/link";
-import { Reveal } from "@/components/membros/motion";
+import { LessonCard } from "@/components/membros/LessonCard";
+import { ParallaxHero, PillarNav, Rail, Reveal } from "@/components/membros/motion";
 import { Lesson, LessonProgress, PILLAR_INFO } from "@/types/client";
-import { lessonCover } from "@/lib/youtube";
+import { Play, ArrowDown } from "lucide-react";
+import { ProgressRing } from "@/components/membros/ProgressRing";
 
 const pad = (n: number) => String(n).padStart(2, "0");
-const ROMAN = ["", "I", "II", "III", "IV", "V", "VI", "VII", "VIII", "IX", "X"];
-const minutes = (s: number | null) => (s && s > 0 ? `${Math.max(1, Math.round(s / 60))} min` : null);
 
 export function Catalog({
   firstName,
@@ -20,12 +20,20 @@ export function Catalog({
   const doneCount = lessons.filter((l) => progressByLesson.get(l.id)?.completed_at).length;
   const pct = lessons.length ? Math.round((doneCount / lessons.length) * 100) : 0;
 
+  // CTA do hero: a aula mais recente em andamento; senão a primeira não concluída
   const inProgress = playable
     .map((l) => ({ l, p: progressByLesson.get(l.id) }))
     .filter((x) => x.p && !x.p.completed_at && (x.p.watched_pct ?? 0) > 0)
-    .sort((a, b) => (b.p?.last_watched_at ?? "").localeCompare(a.p?.last_watched_at ?? ""))[0]?.l;
-  const nextUp = inProgress ?? playable.find((l) => !progressByLesson.get(l.id)?.completed_at);
-  const ctaLabel = inProgress ? "Continuar de onde parou" : doneCount > 0 ? "Próxima aula" : "Começar por aqui";
+    .sort((a, b) =>
+      (b.p?.last_watched_at ?? "").localeCompare(a.p?.last_watched_at ?? "")
+    )[0]?.l;
+  const nextUp =
+    inProgress ?? playable.find((l) => !progressByLesson.get(l.id)?.completed_at);
+  const ctaLabel = inProgress
+    ? "Continuar de onde parou"
+    : doneCount > 0
+      ? "Próxima aula"
+      : "Começar por aqui";
 
   const rows = [0, 1, 2, 3, 4, 5]
     .map((p) => {
@@ -41,171 +49,136 @@ export function Catalog({
     })
     .filter((r) => r.lessons.length > 0 && r.info);
 
-  const openCount = playable.length;
 
   return (
-    <div className="ed-page">
-      {/* ===== Abertura ===== */}
-      <section className="ed-wrap ed-open">
-        <p className="ed-label is-gold ed-in" style={{ "--d": 0 } as React.CSSProperties}>
-          {firstName ? `${firstName} · Programa Empresa Sem Você` : "Programa Empresa Sem Você"}
-        </p>
-        <h1 className="ed-h1 ed-in" style={{ "--d": 1 } as React.CSSProperties}>
-          Sua empresa rodando <em>sem você</em> no operacional.
-        </h1>
-        <p className="ed-lede ed-in" style={{ "--d": 2 } as React.CSSProperties}>
-          O método completo em cinco pilares. Assista no seu ritmo, aplique na empresa e acompanhe
-          o avanço aula a aula.
-        </p>
-        {nextUp && (
-          <div className="ed-actions ed-in" style={{ "--d": 3 } as React.CSSProperties}>
-            <Link href={`/membros/aulas/${nextUp.id}`} className="ed-btn">
-              {ctaLabel}
-              <span aria-hidden>→</span>
-            </Link>
-            <span className="ed-actions__note">
-              {nextUp.pillar_number === 0 ? "Prólogo" : `Capítulo ${ROMAN[nextUp.pillar_number]}`} · {nextUp.title}
-            </span>
-          </div>
-        )}
+    <div className="esv-page">
+      {/* ===== Hero ===== */}
+      <ParallaxHero className="esv-hero">
+        <div className="esv-hero__layer esv-hero__glow" aria-hidden />
+        <div className="esv-hero__layer esv-hero__mark" aria-hidden>
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img src="/logo-esv-mark.png" alt="" />
+        </div>
+        <div className="esv-hero__layer esv-hero__grain" aria-hidden />
+        <div className="esv-hero__rim" aria-hidden />
 
-        <dl className="ed-figs ed-in" style={{ "--d": 4 } as React.CSSProperties}>
-          <div>
-            <dt className="ed-fig">{pct}%</dt>
-            <dd>do programa concluído</dd>
-          </div>
-          <div>
-            <dt className="ed-fig">
-              {doneCount}
-              <small>/{lessons.length}</small>
-            </dt>
-            <dd>aulas assistidas</dd>
-          </div>
-          <div>
-            <dt className="ed-fig">{pad(rows.filter((r) => r.number > 0).length)}</dt>
-            <dd>pilares do método</dd>
-          </div>
-          <div>
-            <dt className="ed-fig">{pad(openCount)}</dt>
-            <dd>aulas liberadas até agora</dd>
-          </div>
-        </dl>
-      </section>
-
-      {/* ===== Índice ===== */}
-      <section className="ed-sec ed-alt" id="indice">
-        <Reveal className="ed-wrap ed-toc">
-          <div>
-            <p className="ed-label is-gold">Índice</p>
-            <h2 className="ed-h2">Os cinco pilares</h2>
-            <p className="ed-body">
-              Cada pilar é um capítulo. Siga na ordem: um prepara o terreno do seguinte.
+        <div className="esv-hero__grid">
+          <div className="esv-hero__copy">
+            <p className="t-eyebrow esv-rise" style={{ "--d": 0 } as React.CSSProperties}>
+              {firstName ? `${firstName}, bom ter você aqui` : "Programa Empresa Sem Você"}
             </p>
-          </div>
-          <ol className="ed-toc__list">
-            {rows.map((r) => (
-              <li key={r.id}>
-                <a href={`#${r.id}`}>
-                  <span className="ed-rn">{r.number === 0 ? "—" : ROMAN[r.number]}</span>
-                  <span className="ed-toc__t">{r.number === 0 ? "Prólogo · Boas-vindas" : r.info.name}</span>
-                  <span className="ed-toc__n">
-                    {r.done}/{r.lessons.length}
+            <h1 className="esv-hero__title esv-rise" style={{ "--d": 1 } as React.CSSProperties}>
+              Sua empresa rodando
+              <br />
+              <em>sem você no operacional.</em>
+            </h1>
+            <p className="esv-hero__lead esv-rise" style={{ "--d": 2 } as React.CSSProperties}>
+              Método completo em 5 pilares. Assista no seu ritmo, aplique na empresa e
+              acompanhe seu avanço aula a aula.
+            </p>
+            <div className="esv-hero__ctas esv-rise" style={{ "--d": 3 } as React.CSSProperties}>
+              {nextUp && (
+                <Link href={`/membros/aulas/${nextUp.id}`} className="esv-btn">
+                  <span className="esv-btn__icon">
+                    <Play size={14} fill="currentColor" strokeWidth={0} />
                   </span>
-                </a>
-              </li>
-            ))}
-          </ol>
-        </Reveal>
-      </section>
+                  {ctaLabel}
+                </Link>
+              )}
+              <a href="#pilares" className="esv-btn esv-btn--ghost esv-glass">
+                Ver os pilares
+                <ArrowDown size={16} strokeWidth={2} />
+              </a>
+            </div>
+            {nextUp && (
+              <p className="esv-hero__next esv-rise" style={{ "--d": 4 } as React.CSSProperties}>
+                <span>{nextUp.pillar_number === 0 ? "Boas-vindas" : `Pilar ${pad(nextUp.pillar_number)}`}</span>
+                {nextUp.title}
+              </p>
+            )}
+          </div>
 
-      {/* ===== Capítulos ===== */}
-      {rows.map((row) => (
-        <section key={row.id} id={row.id} className="ed-sec ed-chapter">
-          <Reveal className="ed-wrap">
-            <header className="ed-chap">
-              <div className="ed-chap__num">
-                <span className="ed-rn is-lg">
-                  {row.number === 0 ? "Prólogo" : `Capítulo ${ROMAN[row.number]}`}
+          {/* Painel de progresso */}
+          <aside className="esv-hero__panel esv-glass esv-rise" style={{ "--d": 2 } as React.CSSProperties}>
+            <ProgressRing pct={pct} id="esvRingCat" />
+            <p className="esv-hero__count">
+              <strong>{doneCount}</strong> de {lessons.length} aulas
+            </p>
+            <ul className="esv-pillars">
+              {rows
+                .filter((r) => r.number > 0)
+                .map((r) => {
+                  const w = r.lessons.length ? (r.done / r.lessons.length) * 100 : 0;
+                  return (
+                    <li key={r.id}>
+                      <span className="esv-pillars__n">{pad(r.number)}</span>
+                      <span className="esv-pillars__bar">
+                        <span style={{ width: `${w}%` }} />
+                      </span>
+                      <span className="esv-pillars__v">
+                        {r.done}/{r.lessons.length}
+                      </span>
+                    </li>
+                  );
+                })}
+            </ul>
+          </aside>
+        </div>
+      </ParallaxHero>
+
+      {/* ===== Navegação por pilar ===== */}
+      <div id="pilares" />
+      <PillarNav
+        items={rows.map((r) => ({
+          id: r.id,
+          short: r.number === 0 ? "00" : pad(r.number),
+          label: r.number === 0 ? "Boas-vindas" : r.info.name,
+        }))}
+      />
+
+      {/* ===== Prateleiras ===== */}
+      <div className="esv-rows">
+        {rows.map((row) => (
+          <Reveal key={row.id} id={row.id} className="esv-row">
+            <header className="esv-row__head">
+              <span className="esv-row__num" aria-hidden>
+                {pad(row.number)}
+              </span>
+              <div className="min-w-0">
+                <p className="esv-row__kicker">
+                  {row.number === 0 ? "Comece por aqui" : `Pilar ${pad(row.number)}`}
+                </p>
+                <h2 className="esv-row__title">{row.info.name}</h2>
+                <p className="esv-row__tese">{row.info.tese}</p>
+              </div>
+              <div className="esv-row__meta">
+                <span>
+                  {row.lessons.length} {row.lessons.length === 1 ? "aula" : "aulas"}
+                  {row.open < row.lessons.length && ` · ${row.lessons.length - row.open} em breve`}
                 </span>
-                <span className="ed-label">
-                  {row.number === 0 ? "Boas-vindas" : `Pilar ${pad(row.number)}`} · {row.done} de {row.lessons.length}{" "}
-                  {row.lessons.length === 1 ? "aula" : "aulas"}
-                </span>
-                <span className="ed-bar">
+                <span className="esv-row__bar">
                   <span style={{ width: `${row.lessons.length ? (row.done / row.lessons.length) * 100 : 0}%` }} />
                 </span>
               </div>
-              <div>
-                <h2 className="ed-h2 is-xl">{row.info.name}</h2>
-                <p className="ed-lede">{row.info.tese}</p>
-                <ol className="ed-lessons">
-                  {row.lessons.map((lesson, i) => {
-                    const prog = progressByLesson.get(lesson.id);
-                    const done = !!prog?.completed_at;
-                    const cover = lessonCover(lesson);
-                    const dur = minutes(lesson.duration_seconds);
-                    const locked = !!lesson.is_locked;
-                    const status = locked
-                      ? "Em breve"
-                      : done
-                        ? "Concluída"
-                        : (prog?.watched_pct ?? 0) > 0
-                          ? `${prog!.watched_pct}% assistido`
-                          : dur ?? "Assistir";
-                    const inner = (
-                      <>
-                        <figure className="ed-poster">
-                          {cover.url ? (
-                            // eslint-disable-next-line @next/next/no-img-element
-                            <img src={cover.url} alt="" loading="lazy" />
-                          ) : (
-                            <span className="ed-poster__blank">
-                              <span className="ed-rn">{row.number === 0 ? "—" : ROMAN[row.number]}</span>
-                            </span>
-                          )}
-                          {!locked && (prog?.watched_pct ?? 0) > 0 && !done && (
-                            <span className="ed-poster__bar">
-                              <span style={{ width: `${prog!.watched_pct}%` }} />
-                            </span>
-                          )}
-                        </figure>
-                        <span className="ed-lesson__tx">
-                          <span className="ed-lesson__meta">
-                            <span className="ed-label">Aula {pad(lesson.order_in_pillar)}</span>
-                            <span className={`ed-label${done ? " is-gold" : ""}`}>{status}</span>
-                          </span>
-                          <span className="ed-lesson__t">{lesson.title}</span>
-                          {lesson.description && (
-                            <span className="ed-lesson__d">{lesson.description}</span>
-                          )}
-                          <span className="ed-lesson__go">
-                            {locked ? "Disponível em breve" : done ? "Rever aula" : "Assistir"}
-                            {!locked && <span aria-hidden> →</span>}
-                          </span>
-                        </span>
-                      </>
-                    );
-                    return (
-                      <li key={lesson.id} className="ed-lesson" style={{ "--i": i } as React.CSSProperties}>
-                        {locked ? (
-                          <div className="ed-lesson__a is-locked" aria-disabled>
-                            {inner}
-                          </div>
-                        ) : (
-                          <Link href={`/membros/aulas/${lesson.id}`} className="ed-lesson__a">
-                            {inner}
-                          </Link>
-                        )}
-                      </li>
-                    );
-                  })}
-                </ol>
-              </div>
             </header>
-
+            <Rail label={row.info.name}>
+              {row.lessons.map((lesson, i) => {
+                const prog = progressByLesson.get(lesson.id);
+                return (
+                  <LessonCard
+                    key={lesson.id}
+                    index={i}
+                    lesson={lesson}
+                    pillarLabel={row.number === 0 ? "Boas-vindas" : `Pilar ${pad(row.number)}`}
+                    watchedPct={prog?.watched_pct ?? 0}
+                    completed={prog?.completed_at != null}
+                  />
+                );
+              })}
+            </Rail>
           </Reveal>
-        </section>
-      ))}
+        ))}
+      </div>
     </div>
   );
 }

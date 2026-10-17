@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
+import { LayoutGroup, motion } from "framer-motion";
 import { createClient } from "@/lib/supabase/client";
 import {
   IconHome,
@@ -11,6 +12,7 @@ import {
   IconManage,
   IconStudents,
   IconProgress,
+  IconLogout,
 } from "@/components/membros/icons";
 import { cn } from "@/lib/utils";
 
@@ -32,14 +34,7 @@ const ADMIN_ITEMS: NavItem[] = [
   { href: "/membros/progresso", label: "Progresso", icon: IconProgress },
 ];
 
-// Marca em texto, no padrão editorial: serifa com o "Sem" em itálico dourado.
-function Mark() {
-  return (
-    <span className="ed-mark">
-      Empresa <i>Sem</i> Você
-    </span>
-  );
-}
+const SPRING = { type: "spring" as const, stiffness: 420, damping: 36, mass: 0.9 };
 
 export function MembrosShell({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
@@ -65,65 +60,122 @@ export function MembrosShell({ children }: { children: React.ReactNode }) {
 
   const items = isAdmin ? [...NAV, ...ADMIN_ITEMS] : NAV;
 
+  const renderLink = (item: NavItem) => {
+    const active = isActive(item.href);
+    const Icon = item.icon;
+    return (
+      <Link
+        key={item.href}
+        href={item.href}
+        className={cn("esv-nav__item", active && "is-active")}
+        aria-current={active ? "page" : undefined}
+      >
+        {active && (
+          <motion.span layoutId="esv-nav-pill" className="esv-nav__pill" transition={SPRING} />
+        )}
+        <span className="esv-nav__icon">
+          <Icon size={19} active={active} />
+        </span>
+        <span className="relative">{item.label}</span>
+      </Link>
+    );
+  };
+
   return (
-    <div className="ed-shell">
-      <header className="ed-nav">
-        <div className="ed-wrap ed-nav__in">
-          <Link href="/membros/dashboard" aria-label="Início">
-            <Mark />
-          </Link>
-          <nav className="ed-nav__links" aria-label="Seções">
-            <ul>
-              {NAV.map((item) => (
-                <li key={item.href}>
-                  <Link
-                    href={item.href}
-                    aria-current={isActive(item.href) ? "page" : undefined}
-                  >
-                    {item.label}
-                  </Link>
-                </li>
-              ))}
-              {isAdmin && <li className="ed-nav__sep" aria-hidden />}
-              {isAdmin &&
-                ADMIN_ITEMS.map((item) => (
-                  <li key={item.href}>
-                    <Link
-                      href={item.href}
-                      aria-current={isActive(item.href) ? "page" : undefined}
-                    >
-                      {item.label}
-                    </Link>
-                  </li>
-                ))}
-            </ul>
+    <div className="esv-shell">
+      <div className="esv-shell__aura" aria-hidden />
+
+      {/* Sidebar desktop: painel de vidro flutuante */}
+      <aside className="esv-side esv-glass hidden md:flex">
+        <Link href="/membros/dashboard" className="esv-side__brand">
+          <span className="esv-brand">
+            <span className="esv-brand__mark">
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img src="/logo-esv-mark.png" alt="Empresa Sem Você" />
+            </span>
+            <span className="esv-brand__txt">
+              <strong>Matheus Martins</strong>
+              <small>Estrategista do Dono</small>
+            </span>
+          </span>
+        </Link>
+
+        <LayoutGroup id="side">
+          <nav className="esv-nav">
+            <p className="esv-nav__label">Programa</p>
+            {NAV.map(renderLink)}
+
+            {isAdmin && (
+              <>
+                <p className="esv-nav__label mt-5">Administração</p>
+                {ADMIN_ITEMS.map(renderLink)}
+              </>
+            )}
           </nav>
-          <button onClick={logout} className="ed-nav__out">
-            Sair
+        </LayoutGroup>
+
+        <div className="flex-1" />
+
+        <button onClick={logout} className="esv-nav__item esv-nav__item--quiet">
+          <span className="esv-nav__icon">
+            <IconLogout size={18} />
+          </span>
+          Sair
+        </button>
+      </aside>
+
+      {/* Barra de topo mobile, com dobra de desfoque */}
+      <header className="esv-topbar md:hidden">
+        <div className="esv-fold" aria-hidden>
+          <span /><span /><span />
+        </div>
+        <div className="esv-topbar__in">
+          <Link href="/membros/dashboard">
+            <span className="esv-brand">
+            <span className="esv-brand__mark">
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img src="/logo-esv-mark.png" alt="Empresa Sem Você" />
+            </span>
+            <span className="esv-brand__txt">
+              <strong>Matheus Martins</strong>
+              <small>Estrategista do Dono</small>
+            </span>
+          </span>
+          </Link>
+          <button onClick={logout} className="esv-iconbtn esv-glass" aria-label="Sair">
+            <IconLogout size={17} />
           </button>
         </div>
       </header>
 
-      <main className="ed-main">{children}</main>
+      <main className="esv-main">{children}</main>
 
-      {/* Celular: barra de seções no rodapé, com filete dourado no item ativo */}
-      <nav className="ed-tabbar" aria-label="Navegação">
-        {items.map((item) => {
-          const active = isActive(item.href);
-          const Icon = item.icon;
-          return (
-            <Link
-              key={item.href}
-              href={item.href}
-              className={cn("ed-tabbar__item", active && "is-active")}
-              aria-current={active ? "page" : undefined}
-            >
-              <Icon size={19} active={active} />
-              <span>{item.label}</span>
-            </Link>
-          );
-        })}
-      </nav>
+      {/* Doca mobile: cápsula de vidro flutuante */}
+      <LayoutGroup id="dock">
+        <nav className="esv-dock esv-glass md:hidden" aria-label="Navegação">
+          {items.map((item) => {
+            const active = isActive(item.href);
+            const Icon = item.icon;
+            return (
+              <Link
+                key={item.href}
+                href={item.href}
+                className={cn("esv-dock__item", active && "is-active")}
+                aria-current={active ? "page" : undefined}
+                aria-label={item.label}
+              >
+                {active && (
+                  <motion.span layoutId="esv-dock-pill" className="esv-dock__pill" transition={SPRING} />
+                )}
+                <span className="relative">
+                  <Icon size={21} active={active} />
+                </span>
+                {items.length <= 4 && <span className="relative esv-dock__txt">{item.label}</span>}
+              </Link>
+            );
+          })}
+        </nav>
+      </LayoutGroup>
     </div>
   );
 }
