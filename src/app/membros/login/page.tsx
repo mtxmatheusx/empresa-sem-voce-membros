@@ -3,8 +3,7 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
-import { Logo } from "@/components/ui/logo";
-import { Button } from "@/components/ui/button";
+import { ArrowRight, Mail } from "lucide-react";
 
 type Mode = "login" | "reset";
 
@@ -57,144 +56,132 @@ export default function MembrosLoginPage() {
     setLoading(false);
   }
 
-  return (
-    <div className="min-h-screen flex items-center justify-center px-5 py-16 relative overflow-hidden">
-      <div className="esv-aura" />
+  const errorBox = error && (
+    <div className="esv-alert" role="alert">
+      {error}
+    </div>
+  );
 
-      <div className="w-full max-w-md relative z-10 anim-fade-up">
-        <div className="mb-12 text-center">
-          <Logo size="lg" showText={false} className="justify-center mb-8" />
-          <p className="t-eyebrow">Área de Membros</p>
-          <p className="font-serif italic text-[22px] text-[#A0A0A0] mt-4 leading-tight">
-            Programa Empresa Sem Você
-          </p>
+  return (
+    <div className="esv-auth">
+      <div className="esv-auth__glow" aria-hidden />
+      <div className="esv-auth__glow esv-auth__glow--2" aria-hidden />
+      {/* eslint-disable-next-line @next/next/no-img-element */}
+      <img src="/logo-esv-mark.png" alt="" className="esv-auth__mark" aria-hidden />
+
+      <div className="esv-auth__col">
+        <header className="esv-auth__head esv-rise">
+          <span className="esv-brand__mark esv-auth__logo">
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img src="/logo-esv-mark.png" alt="Empresa Sem Você" />
+          </span>
+          <p className="t-eyebrow">Área de membros</p>
+          <h1 className="esv-auth__title">
+            Programa <em>Empresa Sem Você</em>
+          </h1>
+        </header>
+
+        <div className="esv-auth__card esv-glass esv-rise" style={{ "--d": 1 } as React.CSSProperties}>
+          {sent ? (
+            <div className="esv-auth__sent">
+              <span className="esv-locked__icon">
+                <Mail size={24} strokeWidth={1.8} />
+              </span>
+              <p className="esv-auth__h">Verifique sua caixa de entrada</p>
+              <p className="esv-auth__p">
+                Mandamos um link para <strong>{email}</strong>. Clique nele para definir sua
+                senha. O link vale por 1 hora.
+              </p>
+              <button
+                onClick={() => {
+                  setSent(false);
+                  setMode("login");
+                }}
+                className="esv-auth__alt"
+              >
+                Voltar ao login
+              </button>
+            </div>
+          ) : mode === "login" ? (
+            <form onSubmit={handleLogin} className="esv-auth__form">
+              <label className="esv-field">
+                <span>E-mail</span>
+                <input
+                  type="email"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  placeholder="seu@email.com"
+                  required
+                  autoComplete="email"
+                  className="esv-input"
+                />
+              </label>
+              <label className="esv-field">
+                <span>Senha</span>
+                <input
+                  type="password"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  placeholder="••••••••"
+                  required
+                  autoComplete="current-password"
+                  className="esv-input"
+                />
+              </label>
+              {errorBox}
+              <button type="submit" className="esv-btn esv-btn--block" disabled={loading}>
+                {loading ? "Entrando…" : "Entrar"}
+                {!loading && <ArrowRight size={17} strokeWidth={2.2} />}
+              </button>
+              <button
+                type="button"
+                onClick={() => {
+                  setMode("reset");
+                  setError(null);
+                }}
+                className="esv-auth__alt is-gold"
+              >
+                Primeiro acesso ou esqueci a senha
+              </button>
+            </form>
+          ) : (
+            <form onSubmit={handleReset} className="esv-auth__form">
+              <p className="esv-auth__p">
+                Digite seu e-mail cadastrado. Enviamos um link para você definir (ou redefinir)
+                sua senha.
+              </p>
+              <label className="esv-field">
+                <span>E-mail cadastrado</span>
+                <input
+                  type="email"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  placeholder="seu@email.com"
+                  required
+                  autoComplete="email"
+                  className="esv-input"
+                />
+              </label>
+              {errorBox}
+              <button type="submit" className="esv-btn esv-btn--block" disabled={loading}>
+                {loading ? "Enviando…" : "Enviar link"}
+              </button>
+              <button
+                type="button"
+                onClick={() => {
+                  setMode("login");
+                  setError(null);
+                }}
+                className="esv-auth__alt"
+              >
+                Voltar ao login
+              </button>
+            </form>
+          )}
         </div>
 
-        {sent ? (
-          <div className="space-y-6 text-center">
-            <div className="card-elevated px-6 py-8">
-              <p className="t-eyebrow mb-3">E-mail enviado</p>
-              <p className="font-serif italic text-[20px] text-[#F5F5F5] leading-tight mb-4">
-                Verifique sua caixa de entrada
-              </p>
-              <p className="text-[14px] text-[#A0A0A0] leading-relaxed">
-                Mandamos um link pra{" "}
-                <span className="text-[#F5F5F5] font-medium">{email}</span>. Clique
-                nele pra definir sua senha — válido por 1 hora.
-              </p>
-            </div>
-            <button
-              onClick={() => {
-                setSent(false);
-                setMode("login");
-              }}
-              className="text-[13px] text-[#6E6E6E] hover:text-[#F5F5F5] transition-colors"
-            >
-              Voltar ao login
-            </button>
-          </div>
-        ) : mode === "login" ? (
-          <form onSubmit={handleLogin} className="space-y-6">
-            <div>
-              <label className="t-label block mb-3">E-mail</label>
-              <input
-                type="email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                placeholder="seu@email.com"
-                required
-                autoComplete="email"
-                className="esv-input"
-              />
-            </div>
-            <div>
-              <label className="t-label block mb-3">Senha</label>
-              <input
-                type="password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                placeholder="••••••••"
-                required
-                autoComplete="current-password"
-                className="esv-input"
-              />
-            </div>
-
-            {error && (
-              <div
-                className="px-5 py-4 rounded-r-lg text-[13px] text-[#F5F5F5]"
-                style={{ borderLeft: "2px solid #E0736B", background: "rgba(224,115,107,0.08)" }}
-              >
-                {error}
-              </div>
-            )}
-
-            <div className="pt-2">
-              <Button type="submit" className="w-full" size="lg" disabled={loading}>
-                {loading ? "Entrando…" : "Entrar"}
-              </Button>
-            </div>
-
-            <button
-              type="button"
-              onClick={() => {
-                setMode("reset");
-                setError(null);
-              }}
-              className="w-full text-center text-[13px] text-[#C9A227] hover:opacity-70 pt-1"
-            >
-              Primeiro acesso ou esqueci a senha
-            </button>
-          </form>
-        ) : (
-          <form onSubmit={handleReset} className="space-y-6">
-            <p className="text-[14px] text-[#A0A0A0] leading-relaxed text-center">
-              Digite seu e-mail cadastrado. Enviamos um link pra você definir (ou
-              redefinir) sua senha.
-            </p>
-            <div>
-              <label className="t-label block mb-3">E-mail cadastrado</label>
-              <input
-                type="email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                placeholder="seu@email.com"
-                required
-                autoComplete="email"
-                className="esv-input"
-              />
-            </div>
-
-            {error && (
-              <div
-                className="px-5 py-4 rounded-r-lg text-[13px] text-[#F5F5F5]"
-                style={{ borderLeft: "2px solid #E0736B", background: "rgba(224,115,107,0.08)" }}
-              >
-                {error}
-              </div>
-            )}
-
-            <div className="pt-2">
-              <Button type="submit" className="w-full" size="lg" disabled={loading}>
-                {loading ? "Enviando…" : "Enviar link"}
-              </Button>
-            </div>
-
-            <button
-              type="button"
-              onClick={() => {
-                setMode("login");
-                setError(null);
-              }}
-              className="w-full text-center text-[13px] text-[#6E6E6E] hover:text-[#F5F5F5] pt-1"
-            >
-              Voltar ao login
-            </button>
-          </form>
-        )}
-
-        <p className="t-label text-center mt-14">
-          Acesso exclusivo · Clientes ativos do programa
+        <p className="esv-auth__foot esv-rise" style={{ "--d": 2 } as React.CSSProperties}>
+          Acesso exclusivo para clientes ativos do programa
         </p>
       </div>
     </div>

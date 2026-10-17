@@ -61,17 +61,17 @@ export default function DefinirSenhaPage() {
 
         {done ? (
           <div className="card-elevated px-6 py-8 text-center">
-            <p className="font-serif italic text-[20px] text-[#F5F5F5] mb-2">
+            <p className="font-serif italic text-[20px] text-[#F4F0E6] mb-2">
               Senha definida!
             </p>
-            <p className="text-[14px] text-[#A0A0A0]">Entrando na plataforma…</p>
+            <p className="text-[14px] text-[#A39E93]">Entrando na plataforma…</p>
           </div>
         ) : ready && !hasSession ? (
           <div className="card-elevated px-6 py-8 text-center">
-            <p className="font-serif italic text-[20px] text-[#F5F5F5] mb-3">
+            <p className="font-serif italic text-[20px] text-[#F4F0E6] mb-3">
               Link inválido ou expirado
             </p>
-            <p className="text-[14px] text-[#A0A0A0] mb-6">
+            <p className="text-[14px] text-[#A39E93] mb-6">
               Peça um novo link em &quot;Primeiro acesso ou esqueci a senha&quot;.
             </p>
             <a
@@ -110,7 +110,7 @@ export default function DefinirSenhaPage() {
 
             {error && (
               <div
-                className="px-5 py-4 rounded-r-lg text-[13px] text-[#F5F5F5]"
+                className="px-5 py-4 rounded-r-lg text-[13px] text-[#F4F0E6]"
                 style={{ borderLeft: "2px solid #E0736B", background: "rgba(224,115,107,0.08)" }}
               >
                 {error}

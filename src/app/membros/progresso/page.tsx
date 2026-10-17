@@ -50,15 +50,15 @@ export default async function ProgressoPage() {
         <div className="esv-aura" />
         <header className="mb-8 relative">
           <p className="t-eyebrow">Administração · só você</p>
-          <h1 className="t-h1 mt-3 text-[#F5F5F5]">Progresso dos alunos</h1>
-          <p className="text-[14px] text-[#A0A0A0] mt-3 max-w-2xl">
+          <h1 className="t-h1 mt-3 text-[#F4F0E6]">Progresso dos alunos</h1>
+          <p className="text-[14px] text-[#A39E93] mt-3 max-w-2xl">
             Quem assistiu e concluiu cada aula. Atualiza sozinho conforme os alunos
             avançam.
           </p>
         </header>
 
         {/* Legenda */}
-        <div className="flex flex-wrap items-center gap-5 mb-5 text-[12px] text-[#A0A0A0]">
+        <div className="flex flex-wrap items-center gap-5 mb-5 text-[12px] text-[#A39E93]">
           <span className="flex items-center gap-2">
             <Dot kind="done" /> Concluiu
           </span>
@@ -71,7 +71,7 @@ export default async function ProgressoPage() {
         </div>
 
         {allClients.length === 0 ? (
-          <div className="card-elevated p-8 text-center text-[14px] text-[#A0A0A0]">
+          <div className="card-elevated p-8 text-center text-[14px] text-[#A39E93]">
             Nenhum aluno cadastrado ainda.
           </div>
         ) : (
@@ -79,22 +79,22 @@ export default async function ProgressoPage() {
             <table className="w-full border-collapse min-w-[640px]">
               <thead>
                 <tr>
-                  <th className="text-left px-3 py-3 text-[11px] uppercase tracking-[0.12em] text-[#6E6E6E] font-medium">
+                  <th className="text-left px-3 py-3 text-[11px] uppercase tracking-[0.12em] text-[#77726A] font-medium">
                     Aluno
                   </th>
                   {allLessons.map((l) => (
                     <th
                       key={l.id}
-                      className="px-2 py-3 text-[11px] uppercase tracking-[0.08em] text-[#6E6E6E] font-medium text-center"
+                      className="px-2 py-3 text-[11px] uppercase tracking-[0.08em] text-[#77726A] font-medium text-center"
                       title={l.title}
                     >
                       {shortLabel(l)}
                     </th>
                   ))}
-                  <th className="px-3 py-3 text-[11px] uppercase tracking-[0.1em] text-[#6E6E6E] font-medium text-center">
+                  <th className="px-3 py-3 text-[11px] uppercase tracking-[0.1em] text-[#77726A] font-medium text-center">
                     %
                   </th>
-                  <th className="px-3 py-3 text-[11px] uppercase tracking-[0.1em] text-[#6E6E6E] font-medium text-right">
+                  <th className="px-3 py-3 text-[11px] uppercase tracking-[0.1em] text-[#77726A] font-medium text-right">
                     Última atividade
                   </th>
                 </tr>
@@ -123,10 +123,10 @@ export default async function ProgressoPage() {
                       style={{ borderTop: "1px solid var(--color-border)" }}
                     >
                       <td className="px-3 py-3">
-                        <p className="text-[14px] text-[#F5F5F5] leading-tight">
+                        <p className="text-[14px] text-[#F4F0E6] leading-tight">
                           {c.name}
                         </p>
-                        <p className="text-[11px] text-[#6E6E6E] truncate max-w-[180px]">
+                        <p className="text-[11px] text-[#77726A] truncate max-w-[180px]">
                           {c.email}
                         </p>
                       </td>
@@ -150,7 +150,7 @@ export default async function ProgressoPage() {
                           {pct}%
                         </span>
                       </td>
-                      <td className="px-3 py-3 text-right text-[12px] text-[#A0A0A0] whitespace-nowrap">
+                      <td className="px-3 py-3 text-right text-[12px] text-[#A39E93] whitespace-nowrap">
                         {lastAct ? formatDate(lastAct) : "—"}
                       </td>
                     </tr>
@@ -162,7 +162,7 @@ export default async function ProgressoPage() {
         )}
 
         {/* Referência dos pilares */}
-        <div className="mt-6 flex flex-wrap gap-x-6 gap-y-2 text-[12px] text-[#6E6E6E]">
+        <div className="mt-6 flex flex-wrap gap-x-6 gap-y-2 text-[12px] text-[#77726A]">
           <span>Onb · Boas-vindas</span>
           {[1, 2, 3, 4, 5].map((p) => (
             <span key={p}>

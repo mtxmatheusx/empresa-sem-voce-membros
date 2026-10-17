@@ -40,7 +40,7 @@ export function ChangePassword() {
       <p className="t-eyebrow flex items-center gap-2">
         <KeyRound size={14} /> Trocar senha
       </p>
-      <p className="text-[13px] text-[#A0A0A0] leading-relaxed">
+      <p className="text-[13px] text-[#A39E93] leading-relaxed">
         Defina uma senha só sua. Vale pro próximo login.
       </p>
       <div>
@@ -68,7 +68,7 @@ export function ChangePassword() {
 
       {msg && (
         <div
-          className="px-4 py-3 rounded-lg text-[13px] text-[#F5F5F5]"
+          className="px-4 py-3 rounded-lg text-[13px] text-[#F4F0E6]"
           style={{
             borderLeft: `2px solid ${msg.ok ? "#5FB98A" : "#E0736B"}`,
             background: msg.ok ? "rgba(95,185,138,0.08)" : "rgba(224,115,107,0.08)",

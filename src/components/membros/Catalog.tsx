@@ -3,6 +3,7 @@ import { LessonCard } from "@/components/membros/LessonCard";
 import { ParallaxHero, PillarNav, Rail, Reveal } from "@/components/membros/motion";
 import { Lesson, LessonProgress, PILLAR_INFO } from "@/types/client";
 import { Play, ArrowDown } from "lucide-react";
+import { ProgressRing } from "@/components/membros/ProgressRing";
 
 const pad = (n: number) => String(n).padStart(2, "0");
 
@@ -48,9 +49,6 @@ export function Catalog({
     })
     .filter((r) => r.lessons.length > 0 && r.info);
 
-  // anel de progresso
-  const R = 44;
-  const C = 2 * Math.PI * R;
 
   return (
     <div className="esv-page">
@@ -102,34 +100,7 @@ export function Catalog({
 
           {/* Painel de progresso */}
           <aside className="esv-hero__panel esv-glass esv-rise" style={{ "--d": 2 } as React.CSSProperties}>
-            <div className="esv-ring">
-              <svg viewBox="0 0 100 100" aria-hidden>
-                <defs>
-                  <linearGradient id="esvRing" x1="0" y1="0" x2="1" y2="1">
-                    <stop offset="0" stopColor="#F1D78A" />
-                    <stop offset="1" stopColor="#B8902A" />
-                  </linearGradient>
-                </defs>
-                <circle cx="50" cy="50" r={R} className="esv-ring__track" />
-                <circle
-                  cx="50"
-                  cy="50"
-                  r={R}
-                  className="esv-ring__bar"
-                  style={
-                    {
-                      strokeDasharray: C,
-                      "--from": C,
-                      "--to": C * (1 - pct / 100),
-                    } as React.CSSProperties
-                  }
-                />
-              </svg>
-              <div className="esv-ring__label">
-                <strong>{pct}%</strong>
-                <span>concluído</span>
-              </div>
-            </div>
+            <ProgressRing pct={pct} id="esvRingCat" />
             <p className="esv-hero__count">
               <strong>{doneCount}</strong> de {lessons.length} aulas
             </p>

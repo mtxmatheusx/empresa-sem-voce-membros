@@ -168,7 +168,7 @@ export function LessonManager({ initialLessons }: { initialLessons: Lesson[] }) 
     <div className="relative">
       {error && (
         <div
-          className="mb-6 px-5 py-4 rounded-lg text-[13px] text-[#F5F5F5]"
+          className="mb-6 px-5 py-4 rounded-lg text-[13px] text-[#F4F0E6]"
           style={{ borderLeft: "2px solid #E0736B", background: "rgba(224,115,107,0.08)" }}
         >
           {error}
@@ -186,7 +186,7 @@ export function LessonManager({ initialLessons }: { initialLessons: Lesson[] }) 
               <div className="flex items-center justify-between mb-4">
                 <div>
                   <p className="t-label">{p === 0 ? "Boas-vindas" : `Pilar ${p}`}</p>
-                  <h3 className="text-[17px] font-semibold text-[#F5F5F5] mt-1">
+                  <h3 className="text-[17px] font-semibold text-[#F4F0E6] mt-1">
                     {info.name}
                   </h3>
                 </div>
@@ -199,7 +199,7 @@ export function LessonManager({ initialLessons }: { initialLessons: Lesson[] }) 
               </div>
 
               {items.length === 0 ? (
-                <p className="text-[13px] text-[#6E6E6E]">Nenhuma aula ainda.</p>
+                <p className="text-[13px] text-[#77726A]">Nenhuma aula ainda.</p>
               ) : (
                 <ul className="space-y-1">
                   {items.map((l) => (
@@ -208,31 +208,31 @@ export function LessonManager({ initialLessons }: { initialLessons: Lesson[] }) 
                       className="flex items-center gap-3 py-2.5"
                       style={{ borderTop: "1px solid var(--color-border)" }}
                     >
-                      <span className="text-[13px] text-[#6E6E6E] w-6 shrink-0">
+                      <span className="text-[13px] text-[#77726A] w-6 shrink-0">
                         {String(l.order_in_pillar).padStart(2, "0")}
                       </span>
-                      <span className="flex-1 text-[14px] text-[#F5F5F5] truncate">
+                      <span className="flex-1 text-[14px] text-[#F4F0E6] truncate">
                         {l.title}
                       </span>
                       {isYoutube(l.video_url) && (
                         <Play size={13} className="text-[#C9A227] shrink-0" fill="#C9A227" />
                       )}
-                      {l.is_locked && <Lock size={13} className="text-[#6E6E6E] shrink-0" />}
+                      {l.is_locked && <Lock size={13} className="text-[#77726A] shrink-0" />}
                       {l.is_published ? (
                         <Eye size={14} className="text-[#5FB98A] shrink-0" />
                       ) : (
-                        <EyeOff size={14} className="text-[#6E6E6E] shrink-0" />
+                        <EyeOff size={14} className="text-[#77726A] shrink-0" />
                       )}
                       <button
                         onClick={() => startEdit(l)}
-                        className="text-[#A0A0A0] hover:text-[#F5F5F5] p-1"
+                        className="text-[#A39E93] hover:text-[#F4F0E6] p-1"
                         title="Editar"
                       >
                         <Pencil size={15} />
                       </button>
                       <button
                         onClick={() => remove(l)}
-                        className="text-[#A0A0A0] hover:text-[#E0736B] p-1"
+                        className="text-[#A39E93] hover:text-[#E0736B] p-1"
                         title="Excluir"
                       >
                         <Trash2 size={15} />
@@ -259,10 +259,10 @@ export function LessonManager({ initialLessons }: { initialLessons: Lesson[] }) 
             onClick={(e) => e.stopPropagation()}
           >
             <div className="flex items-center justify-between mb-6">
-              <h3 className="text-[18px] font-semibold text-[#F5F5F5]">
+              <h3 className="text-[18px] font-semibold text-[#F4F0E6]">
                 {editing ? "Editar aula" : "Nova aula"}
               </h3>
-              <button onClick={() => setOpen(false)} className="text-[#A0A0A0] hover:text-[#F5F5F5]">
+              <button onClick={() => setOpen(false)} className="text-[#A39E93] hover:text-[#F4F0E6]">
                 <X size={20} />
               </button>
             </div>
@@ -360,7 +360,7 @@ export function LessonManager({ initialLessons }: { initialLessons: Lesson[] }) 
                       onChange={(e) => setForm((f) => ({ ...f, cover_url: e.target.value }))}
                       placeholder="ou cole a URL da imagem"
                     />
-                    <p className="text-[11px] text-[#6E6E6E]">
+                    <p className="text-[11px] text-[#77726A]">
                       Sem capa, usamos a thumb do YouTube automaticamente.
                     </p>
                   </div>
@@ -415,7 +415,7 @@ export function LessonManager({ initialLessons }: { initialLessons: Lesson[] }) 
                             documents: f.documents.filter((_, idx) => idx !== i),
                           }))
                         }
-                        className="text-[#A0A0A0] hover:text-[#E0736B] p-2 shrink-0"
+                        className="text-[#A39E93] hover:text-[#E0736B] p-2 shrink-0"
                         title="Remover documento"
                       >
                         <X size={16} />
@@ -435,7 +435,7 @@ export function LessonManager({ initialLessons }: { initialLessons: Lesson[] }) 
               </div>
 
               <div className="flex items-center gap-6 pt-1">
-                <label className="flex items-center gap-2 text-[14px] text-[#F5F5F5] cursor-pointer">
+                <label className="flex items-center gap-2 text-[14px] text-[#F4F0E6] cursor-pointer">
                   <input
                     type="checkbox"
                     checked={form.is_published}
@@ -443,7 +443,7 @@ export function LessonManager({ initialLessons }: { initialLessons: Lesson[] }) 
                   />
                   Publicada
                 </label>
-                <label className="flex items-center gap-2 text-[14px] text-[#F5F5F5] cursor-pointer">
+                <label className="flex items-center gap-2 text-[14px] text-[#F4F0E6] cursor-pointer">
                   <input
                     type="checkbox"
                     checked={form.is_locked}
@@ -464,7 +464,7 @@ export function LessonManager({ initialLessons }: { initialLessons: Lesson[] }) 
                 </button>
                 <button
                   onClick={() => setOpen(false)}
-                  className="px-6 h-12 rounded-full text-[14px] text-[#A0A0A0]"
+                  className="px-6 h-12 rounded-full text-[14px] text-[#A39E93]"
                   style={{ border: "1px solid var(--color-border-strong)" }}
                 >
                   Cancelar

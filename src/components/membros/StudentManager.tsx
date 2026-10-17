@@ -103,7 +103,7 @@ export function StudentManager({ initial }: { initial: Client[] }) {
     <div className="relative">
       {msg && (
         <div
-          className="mb-6 px-5 py-4 rounded-lg text-[13px] text-[#F5F5F5]"
+          className="mb-6 px-5 py-4 rounded-lg text-[13px] text-[#F4F0E6]"
           style={{
             borderLeft: `2px solid ${msg.ok ? "#5FB98A" : "#E0736B"}`,
             background: msg.ok ? "rgba(95,185,138,0.08)" : "rgba(224,115,107,0.08)",
@@ -180,7 +180,7 @@ export function StudentManager({ initial }: { initial: Client[] }) {
             <Send size={16} />
             {busy ? "Criando…" : "Criar acesso e convidar"}
           </button>
-          <p className="text-[12px] text-[#6E6E6E]">
+          <p className="text-[12px] text-[#77726A]">
             O aluno recebe um e-mail pra definir a própria senha. Depois entra com
             e-mail + senha.
           </p>
@@ -193,7 +193,7 @@ export function StudentManager({ initial }: { initial: Client[] }) {
           Alunos cadastrados · {students.length}
         </p>
         {students.length === 0 ? (
-          <p className="text-[13px] text-[#6E6E6E]">Nenhum aluno ainda.</p>
+          <p className="text-[13px] text-[#77726A]">Nenhum aluno ainda.</p>
         ) : (
           <ul className="space-y-1">
             {students.map((c) => (
@@ -203,13 +203,13 @@ export function StudentManager({ initial }: { initial: Client[] }) {
                 style={{ borderTop: "1px solid var(--color-border)" }}
               >
                 <div className="flex-1 min-w-0">
-                  <p className="text-[14px] text-[#F5F5F5] font-medium truncate">
+                  <p className="text-[14px] text-[#F4F0E6] font-medium truncate">
                     {c.name}
                   </p>
-                  <p className="text-[12px] text-[#A0A0A0] truncate">{c.email}</p>
+                  <p className="text-[12px] text-[#A39E93] truncate">{c.email}</p>
                 </div>
 
-                <div className="flex items-center gap-2 text-[11px] text-[#6E6E6E]">
+                <div className="flex items-center gap-2 text-[11px] text-[#77726A]">
                   <CalendarDays size={13} />
                   {c.ends_at ? `até ${formatDate(c.ends_at)}` : "sem validade"}
                 </div>
@@ -217,7 +217,7 @@ export function StudentManager({ initial }: { initial: Client[] }) {
                 <span
                   className="text-[11px] px-2.5 py-1 rounded-full shrink-0"
                   style={{
-                    color: statusColor[c.status] ?? "#A0A0A0",
+                    color: statusColor[c.status] ?? "#A39E93",
                     background: "rgba(255,255,255,0.05)",
                     border: `1px solid ${statusColor[c.status] ?? "#333"}40`,
                   }}
@@ -239,7 +239,7 @@ export function StudentManager({ initial }: { initial: Client[] }) {
                     <button
                       onClick={() => setStatus(c, "pausado")}
                       disabled={rowBusy === c.id}
-                      className="text-[12px] text-[#A0A0A0] hover:text-[#F5F5F5] px-2 py-1"
+                      className="text-[12px] text-[#A39E93] hover:text-[#F4F0E6] px-2 py-1"
                     >
                       Pausar
                     </button>
@@ -255,7 +255,7 @@ export function StudentManager({ initial }: { initial: Client[] }) {
                   <button
                     onClick={() => remove(c)}
                     disabled={rowBusy === c.id}
-                    className="text-[#A0A0A0] hover:text-[#E0736B] p-1.5"
+                    className="text-[#A39E93] hover:text-[#E0736B] p-1.5"
                     title="Remover acesso"
                   >
                     <Trash2 size={15} />

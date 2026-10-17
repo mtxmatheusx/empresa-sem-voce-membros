@@ -32,7 +32,7 @@ export default async function PerfilPage() {
         <div className="esv-aura" />
         <header className="mb-12 relative">
           <p className="t-eyebrow">Sua conta</p>
-          <h1 className="t-h1 mt-3 text-[#F5F5F5]">Perfil</h1>
+          <h1 className="t-h1 mt-3 text-[#F4F0E6]">Perfil</h1>
         </header>
 
         <div className="card-elevated p-8 md:p-10 mb-10 relative">
@@ -65,7 +65,7 @@ export default async function PerfilPage() {
 
         <div className="card-elevated p-8 relative">
           <p className="t-eyebrow mb-4">Sessão</p>
-          <p className="text-[14px] text-[#A0A0A0] leading-relaxed mb-6 max-w-xl">
+          <p className="text-[14px] text-[#A39E93] leading-relaxed mb-6 max-w-xl">
             Pra atualizar seus dados de cadastro, chama o time no WhatsApp.
           </p>
           <LogoutButton />
@@ -79,7 +79,7 @@ function Field({ label, value }: { label: string; value: string }) {
   return (
     <div>
       <p className="t-label mb-2">{label}</p>
-      <p className="text-[15px] text-[#F5F5F5] tracking-[-0.01em]">{value}</p>
+      <p className="text-[15px] text-[#F4F0E6] tracking-[-0.01em]">{value}</p>
     </div>
   );
 }

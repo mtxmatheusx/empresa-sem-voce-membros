@@ -17,7 +17,7 @@ export default function MembrosLandingPage() {
         <div className="max-w-2xl">
           <p className="t-eyebrow anim-fade-up">Área de Membros</p>
 
-          <h1 className="font-display font-semibold text-[clamp(2rem,1.6rem+1.8vw,2.75rem)] leading-[1.1] tracking-[-0.025em] text-[#F5F5F5] mt-6 anim-fade-up delay-100">
+          <h1 className="font-display font-semibold text-[clamp(2rem,1.6rem+1.8vw,2.75rem)] leading-[1.1] tracking-[-0.025em] text-[#F4F0E6] mt-6 anim-fade-up delay-100">
             Em breve, seu acesso completo
             <br />
             <span className="font-serif italic text-[#C9A227]">
@@ -25,7 +25,7 @@ export default function MembrosLandingPage() {
             </span>
           </h1>
 
-          <p className="text-[16px] md:text-[17px] leading-[1.55] text-[#A0A0A0] mt-6 max-w-xl anim-fade-up delay-300">
+          <p className="text-[16px] md:text-[17px] leading-[1.55] text-[#A39E93] mt-6 max-w-xl anim-fade-up delay-300">
             A plataforma exclusiva pra você consumir o material completo do Programa
             Empresa Sem Você, acompanhar seu progresso pelos 5 pilares e ter acesso
             direto às tarefas, calls e suporte.
@@ -33,7 +33,7 @@ export default function MembrosLandingPage() {
 
           <div className="mt-16 anim-fade-up delay-500">
             <p className="t-label mb-3">Já é cliente?</p>
-            <p className="text-[14px] leading-[1.6] text-[#A0A0A0] max-w-md mb-5">
+            <p className="text-[14px] leading-[1.6] text-[#A39E93] max-w-md mb-5">
               Entre com seu e-mail e senha. Primeiro acesso? Defina sua senha na tela
               de login.
             </p>

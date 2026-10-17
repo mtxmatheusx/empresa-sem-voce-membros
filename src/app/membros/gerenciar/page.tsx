@@ -28,8 +28,8 @@ export default async function GerenciarPage() {
         <div className="esv-aura" />
         <header className="mb-8 relative">
           <p className="t-eyebrow">Administração · só você</p>
-          <h1 className="t-h1 mt-3 text-[#F5F5F5]">Gerenciar aulas</h1>
-          <p className="text-[14px] text-[#A0A0A0] mt-3 max-w-2xl">
+          <h1 className="t-h1 mt-3 text-[#F4F0E6]">Gerenciar aulas</h1>
+          <p className="text-[14px] text-[#A39E93] mt-3 max-w-2xl">
             Cole o link do YouTube de cada aula, defina o pilar e a ordem, suba a capa
             (pôster) e escreva a tarefa. Publique ou deixe bloqueada com cadeado.
           </p>
