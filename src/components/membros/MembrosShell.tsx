@@ -3,30 +3,38 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
+import { LayoutGroup, motion } from "framer-motion";
 import { createClient } from "@/lib/supabase/client";
-import { Logo } from "@/components/ui/logo";
 import {
-  LayoutDashboard,
-  Clapperboard,
-  User,
-  LogOut,
-  SlidersHorizontal,
-  Users,
-  Activity,
-} from "lucide-react";
+  IconHome,
+  IconLessons,
+  IconProfile,
+  IconManage,
+  IconStudents,
+  IconProgress,
+  IconLogout,
+} from "@/components/membros/icons";
 import { cn } from "@/lib/utils";
 
-const NAV = [
-  { href: "/membros/dashboard", label: "Início", icon: LayoutDashboard },
-  { href: "/membros/aulas", label: "Aulas", icon: Clapperboard },
-  { href: "/membros/perfil", label: "Perfil", icon: User },
+type NavItem = {
+  href: string;
+  label: string;
+  icon: (p: { size?: number; active?: boolean }) => React.ReactElement;
+};
+
+const NAV: NavItem[] = [
+  { href: "/membros/dashboard", label: "Início", icon: IconHome },
+  { href: "/membros/aulas", label: "Aulas", icon: IconLessons },
+  { href: "/membros/perfil", label: "Perfil", icon: IconProfile },
 ];
 
-const ADMIN_ITEMS = [
-  { href: "/membros/gerenciar", label: "Gerenciar", icon: SlidersHorizontal },
-  { href: "/membros/alunos", label: "Alunos", icon: Users },
-  { href: "/membros/progresso", label: "Progresso", icon: Activity },
+const ADMIN_ITEMS: NavItem[] = [
+  { href: "/membros/gerenciar", label: "Gerenciar", icon: IconManage },
+  { href: "/membros/alunos", label: "Alunos", icon: IconStudents },
+  { href: "/membros/progresso", label: "Progresso", icon: IconProgress },
 ];
+
+const SPRING = { type: "spring" as const, stiffness: 420, damping: 36, mass: 0.9 };
 
 export function MembrosShell({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
@@ -45,34 +53,106 @@ export function MembrosShell({ children }: { children: React.ReactNode }) {
     router.refresh();
   }
 
-  const items = isAdmin ? [...NAV, ...ADMIN_ITEMS] : NAV;
-
   const isActive = (href: string) =>
     href === "/membros/dashboard"
       ? pathname === href
-      : pathname?.startsWith(href);
+      : !!pathname?.startsWith(href);
+
+  const items = isAdmin ? [...NAV, ...ADMIN_ITEMS] : NAV;
+
+  const renderLink = (item: NavItem) => {
+    const active = isActive(item.href);
+    const Icon = item.icon;
+    return (
+      <Link
+        key={item.href}
+        href={item.href}
+        className={cn("esv-nav__item", active && "is-active")}
+        aria-current={active ? "page" : undefined}
+      >
+        {active && (
+          <motion.span layoutId="esv-nav-pill" className="esv-nav__pill" transition={SPRING} />
+        )}
+        <span className="esv-nav__icon">
+          <Icon size={19} active={active} />
+        </span>
+        <span className="relative">{item.label}</span>
+      </Link>
+    );
+  };
 
   return (
-    <div className="min-h-screen flex relative" style={{ background: "var(--color-bg)" }}>
-      {/* Sidebar desktop */}
-      <aside
-        className="w-64 flex-col fixed inset-y-0 left-0 z-30 hidden md:flex"
-        style={{
-          background: "rgba(255,255,255,0.02)",
-          borderRight: "1px solid var(--color-border)",
-        }}
-      >
-        <div className="px-7 pt-8 pb-8">
-          <Link href="/membros/dashboard" className="hover:opacity-80 transition-opacity">
-            <Logo size="sm" />
+    <div className="esv-shell">
+      <div className="esv-shell__aura" aria-hidden />
+
+      {/* Sidebar desktop: painel de vidro flutuante */}
+      <aside className="esv-side esv-glass hidden md:flex">
+        <Link href="/membros/dashboard" className="esv-side__brand">
+          <span className="esv-brand">
+            <span className="esv-brand__mark">
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img src="/logo-esv-mark.png" alt="Empresa Sem Você" />
+            </span>
+            <span className="esv-brand__txt">
+              <strong>Matheus Martins</strong>
+              <small>Estrategista do Dono</small>
+            </span>
+          </span>
+        </Link>
+
+        <LayoutGroup id="side">
+          <nav className="esv-nav">
+            <p className="esv-nav__label">Programa</p>
+            {NAV.map(renderLink)}
+
+            {isAdmin && (
+              <>
+                <p className="esv-nav__label mt-5">Administração</p>
+                {ADMIN_ITEMS.map(renderLink)}
+              </>
+            )}
+          </nav>
+        </LayoutGroup>
+
+        <div className="flex-1" />
+
+        <button onClick={logout} className="esv-nav__item esv-nav__item--quiet">
+          <span className="esv-nav__icon">
+            <IconLogout size={18} />
+          </span>
+          Sair
+        </button>
+      </aside>
+
+      {/* Barra de topo mobile, com dobra de desfoque */}
+      <header className="esv-topbar md:hidden">
+        <div className="esv-fold" aria-hidden>
+          <span /><span /><span />
+        </div>
+        <div className="esv-topbar__in">
+          <Link href="/membros/dashboard">
+            <span className="esv-brand">
+            <span className="esv-brand__mark">
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img src="/logo-esv-mark.png" alt="Empresa Sem Você" />
+            </span>
+            <span className="esv-brand__txt">
+              <strong>Matheus Martins</strong>
+              <small>Estrategista do Dono</small>
+            </span>
+          </span>
           </Link>
+          <button onClick={logout} className="esv-iconbtn esv-glass" aria-label="Sair">
+            <IconLogout size={17} />
+          </button>
         </div>
+      </header>
 
-        <div className="px-4 mb-2">
-          <p className="t-label px-3">Programa</p>
-        </div>
+      <main className="esv-main">{children}</main>
 
-        <nav className="px-4 space-y-1 mb-6">
+      {/* Doca mobile: cápsula de vidro flutuante */}
+      <LayoutGroup id="dock">
+        <nav className="esv-dock esv-glass md:hidden" aria-label="Navegação">
           {items.map((item) => {
             const active = isActive(item.href);
             const Icon = item.icon;
@@ -80,80 +160,22 @@ export function MembrosShell({ children }: { children: React.ReactNode }) {
               <Link
                 key={item.href}
                 href={item.href}
-                className={cn(
-                  "flex items-center gap-3 px-3.5 py-2.5 text-[14px] font-medium tracking-[-0.01em] rounded-lg transition-all duration-300",
-                  active ? "text-[#0C0C0C]" : "text-[#A0A0A0] hover:text-[#F5F5F5]"
-                )}
-                style={
-                  active
-                    ? { background: "linear-gradient(135deg,#C9A227,#D4AF37)" }
-                    : undefined
-                }
+                className={cn("esv-dock__item", active && "is-active")}
+                aria-current={active ? "page" : undefined}
+                aria-label={item.label}
               >
-                <Icon size={16} strokeWidth={1.75} />
-                {item.label}
+                {active && (
+                  <motion.span layoutId="esv-dock-pill" className="esv-dock__pill" transition={SPRING} />
+                )}
+                <span className="relative">
+                  <Icon size={21} active={active} />
+                </span>
+                {items.length <= 4 && <span className="relative esv-dock__txt">{item.label}</span>}
               </Link>
             );
           })}
         </nav>
-
-        <div className="flex-1" />
-
-        <div
-          className="px-4 pb-6 pt-3 mx-4"
-          style={{ borderTop: "1px solid var(--color-border)" }}
-        >
-          <button
-            onClick={logout}
-            className="w-full flex items-center gap-3 px-3.5 py-2.5 text-[13px] text-[#6E6E6E] hover:text-[#F5F5F5] rounded-lg transition-all duration-300 cursor-pointer"
-          >
-            <LogOut size={14} strokeWidth={1.75} />
-            Sair
-          </button>
-        </div>
-      </aside>
-
-      <main className="flex-1 md:ml-64 overflow-auto pb-24 md:pb-0">{children}</main>
-
-      {/* Mobile bottom nav */}
-      <nav
-        className="md:hidden fixed bottom-0 inset-x-0 z-40"
-        style={{
-          background: "rgba(12,12,12,0.95)",
-          borderTop: "1px solid var(--color-border)",
-          backdropFilter: "blur(12px)",
-        }}
-      >
-        <div
-          className="grid"
-          style={{ gridTemplateColumns: `repeat(${items.length + 1}, 1fr)` }}
-        >
-          {items.map((item) => {
-            const active = isActive(item.href);
-            const Icon = item.icon;
-            return (
-              <Link
-                key={item.href}
-                href={item.href}
-                className={cn(
-                  "flex flex-col items-center justify-center gap-1 py-3 text-[10px] tracking-[0.05em] uppercase transition-colors",
-                  active ? "text-[#C9A227]" : "text-[#A0A0A0]"
-                )}
-              >
-                <Icon size={18} strokeWidth={1.75} />
-                {item.label}
-              </Link>
-            );
-          })}
-          <button
-            onClick={logout}
-            className="flex flex-col items-center justify-center gap-1 py-3 text-[10px] tracking-[0.05em] uppercase text-[#6E6E6E] cursor-pointer"
-          >
-            <LogOut size={18} strokeWidth={1.75} />
-            Sair
-          </button>
-        </div>
-      </nav>
+      </LayoutGroup>
     </div>
   );
 }
