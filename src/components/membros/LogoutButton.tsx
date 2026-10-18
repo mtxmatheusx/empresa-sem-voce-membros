@@ -2,7 +2,7 @@
 
 import { useRouter } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
-import { Button } from "@/components/ui/button";
+import { IconLogout } from "@/components/membros/icons";
 
 export function LogoutButton() {
   const router = useRouter();
@@ -15,8 +15,8 @@ export function LogoutButton() {
   }
 
   return (
-    <Button variant="outline" onClick={logout}>
-      Sair da conta
-    </Button>
+    <button type="button" onClick={logout} className="esv-btn esv-btn--ghost esv-glass">
+      <IconLogout size={17} /> Sair da conta
+    </button>
   );
 }

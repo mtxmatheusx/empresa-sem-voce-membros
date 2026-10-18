@@ -2,8 +2,9 @@
 
 import { useState } from "react";
 import { createClient } from "@/lib/supabase/client";
-import { Button } from "@/components/ui/button";
-import { KeyRound } from "lucide-react";
+import { Check, KeyRound } from "lucide-react";
+
+const MIN = 8;
 
 export function ChangePassword() {
   const [pw, setPw] = useState("");
@@ -13,8 +14,8 @@ export function ChangePassword() {
 
   async function submit(e: React.FormEvent) {
     e.preventDefault();
-    if (pw.length < 6) {
-      setMsg({ ok: false, text: "A senha precisa ter pelo menos 6 caracteres." });
+    if (pw.length < MIN) {
+      setMsg({ ok: false, text: `A senha precisa ter pelo menos ${MIN} caracteres.` });
       return;
     }
     if (pw !== confirm) {
@@ -27,35 +28,32 @@ export function ChangePassword() {
     const { error } = await supabase.auth.updateUser({ password: pw });
     setLoading(false);
     if (error) {
-      setMsg({ ok: false, text: error.message });
+      setMsg({ ok: false, text: "Não deu para trocar agora. Tente de novo em instantes." });
       return;
     }
-    setMsg({ ok: true, text: "Senha alterada com sucesso!" });
+    setMsg({ ok: true, text: "Senha alterada. Vale a partir do próximo login." });
     setPw("");
     setConfirm("");
   }
 
   return (
-    <form onSubmit={submit} className="space-y-4 max-w-sm">
-      <p className="t-eyebrow flex items-center gap-2">
-        <KeyRound size={14} /> Trocar senha
+    <form onSubmit={submit} className="esv-pwform">
+      <p className="esv-panel__kicker">
+        <KeyRound size={15} strokeWidth={2} /> Trocar senha
       </p>
-      <p className="text-[13px] text-[#A39E93] leading-relaxed">
-        Defina uma senha só sua. Vale pro próximo login.
-      </p>
-      <div>
-        <label className="t-label block mb-2">Nova senha</label>
+      <label className="esv-field">
+        <span>Nova senha</span>
         <input
           type="password"
           value={pw}
           onChange={(e) => setPw(e.target.value)}
-          placeholder="Mínimo 6 caracteres"
+          placeholder={`Mínimo ${MIN} caracteres`}
           autoComplete="new-password"
           className="esv-input"
         />
-      </div>
-      <div>
-        <label className="t-label block mb-2">Confirmar senha</label>
+      </label>
+      <label className="esv-field">
+        <span>Confirmar senha</span>
         <input
           type="password"
           value={confirm}
@@ -64,23 +62,15 @@ export function ChangePassword() {
           autoComplete="new-password"
           className="esv-input"
         />
-      </div>
-
+      </label>
       {msg && (
-        <div
-          className="px-4 py-3 rounded-lg text-[13px] text-[#F4F0E6]"
-          style={{
-            borderLeft: `2px solid ${msg.ok ? "#5FB98A" : "#E0736B"}`,
-            background: msg.ok ? "rgba(95,185,138,0.08)" : "rgba(224,115,107,0.08)",
-          }}
-        >
-          {msg.text}
-        </div>
+        <p className={msg.ok ? "esv-ok" : "esv-alert"} role="status">
+          {msg.ok && <Check size={15} strokeWidth={2.6} />} {msg.text}
+        </p>
       )}
-
-      <Button type="submit" disabled={loading}>
+      <button type="submit" className="esv-btn esv-btn--block" disabled={loading}>
         {loading ? "Salvando…" : "Salvar nova senha"}
-      </Button>
+      </button>
     </form>
   );
 }

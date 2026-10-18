@@ -3,6 +3,7 @@ import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import { MembrosShell } from "@/components/membros/MembrosShell";
 import { DashboardView } from "@/components/membros/DashboardView";
+import { Onboarding } from "@/components/membros/Onboarding";
 import { Client, ClientTask, Lesson, LessonProgress } from "@/types/client";
 import { MessageCircle } from "lucide-react";
 
@@ -75,8 +76,21 @@ export default async function MembrosDashboardPage() {
     ((progress || []) as LessonProgress[]).map((p) => [p.lesson_id, p])
   );
 
+  const totalDays = typedClient.ends_at
+    ? Math.max(
+        1,
+        Math.round(
+          (new Date(typedClient.ends_at).getTime() - new Date(typedClient.started_at).getTime()) /
+            86_400_000
+        )
+      )
+    : 120;
+
   return (
     <MembrosShell>
+      {!typedClient.onboarded_at && (
+        <Onboarding firstName={typedClient.name?.split(" ")[0] ?? ""} totalDays={totalDays} />
+      )}
       <DashboardView
         client={typedClient}
         lessons={(lessons || []) as Lesson[]}

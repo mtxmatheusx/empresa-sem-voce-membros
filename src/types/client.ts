@@ -12,6 +12,7 @@ export interface Client {
   status: ClientStatus;
   current_pillar: number;
   completion_pct: number;
+  onboarded_at?: string | null;
   health_score: number | null;
   created_at: string;
   updated_at: string;
@@ -41,6 +42,7 @@ export interface LessonProgress {
   client_id: string;
   lesson_id: string;
   watched_pct: number;
+  last_position_seconds?: number;
   completed_at: string | null;
   last_watched_at: string | null;
   created_at: string;
@@ -88,3 +90,12 @@ export const PILLAR_INFO: Record<number, { name: string; tese: string; accent: s
   4: { name: "Eficiência com IA", tese: "A maioria dos donos contrata gente quando deveria automatizar tarefas.", accent: "#B8902A" },
   5: { name: "Marketing & Vendas", tese: "Vender mais sem virar gerente comercial.", accent: "#B8902A" },
 };
+
+export interface LessonNote {
+  id: string;
+  client_id: string;
+  lesson_id: string;
+  content: string;
+  created_at: string;
+  updated_at: string;
+}

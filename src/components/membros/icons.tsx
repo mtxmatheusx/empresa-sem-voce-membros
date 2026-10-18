@@ -97,3 +97,14 @@ export function IconLogout(p: IconProps) {
     </Base>
   );
 }
+
+export function IconNotes(p: IconProps) {
+  return (
+    <Base {...p}>
+      <path className="esv-ico__fill" d="M6 3.8h9.2L19 7.6V19a1.6 1.6 0 0 1-1.6 1.6H6A1.6 1.6 0 0 1 4.4 19V5.4A1.6 1.6 0 0 1 6 3.8z" />
+      <path d="M6 3.8h9.2L19 7.6V19a1.6 1.6 0 0 1-1.6 1.6H6A1.6 1.6 0 0 1 4.4 19V5.4A1.6 1.6 0 0 1 6 3.8z" />
+      <path d="M15 3.9v3.9h3.9" opacity=".55" />
+      <path d="M8 11.5h7.5M8 15h5" />
+    </Base>
+  );
+}

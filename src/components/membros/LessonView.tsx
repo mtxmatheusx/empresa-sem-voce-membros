@@ -2,6 +2,7 @@ import Link from "next/link";
 import { Lesson, LessonProgress, PILLAR_INFO } from "@/types/client";
 import { LessonPlayer } from "@/components/membros/LessonPlayer";
 import { MarkLessonComplete } from "@/components/membros/LessonActions";
+import { LessonNotes } from "@/components/membros/LessonNotes";
 import { lessonCover } from "@/lib/youtube";
 import {
   ArrowLeft,
@@ -24,11 +25,13 @@ export function LessonView({
   clientId,
   allLessons,
   progressByLesson,
+  note,
 }: {
   lesson: Lesson;
   clientId: string;
   allLessons: Lesson[];
   progressByLesson: Map<string, LessonProgress>;
+  note?: { content: string; updated_at: string } | null;
 }) {
   const info = PILLAR_INFO[lesson.pillar_number];
   const prog = progressByLesson.get(lesson.id);
@@ -77,6 +80,7 @@ export function LessonView({
               lessonId={lesson.id}
               clientId={clientId}
               initialPct={prog?.watched_pct ?? 0}
+              initialPosition={prog?.last_position_seconds ?? 0}
               completed={completed}
             />
           </div>
@@ -139,6 +143,15 @@ export function LessonView({
               )}
             </div>
           )}
+
+          <div className="esv-rise" style={{ "--d": 5 } as React.CSSProperties}>
+            <LessonNotes
+              lessonId={lesson.id}
+              clientId={clientId}
+              initialContent={note?.content ?? ""}
+              initialUpdatedAt={note?.updated_at ?? null}
+            />
+          </div>
 
           {/* navegação no fim */}
           <nav className="esv-lesson__nav esv-rise" style={{ "--d": 5 } as React.CSSProperties}>

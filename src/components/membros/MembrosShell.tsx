@@ -13,6 +13,7 @@ import {
   IconStudents,
   IconProgress,
   IconLogout,
+  IconNotes,
 } from "@/components/membros/icons";
 import { cn } from "@/lib/utils";
 
@@ -25,6 +26,7 @@ type NavItem = {
 const NAV: NavItem[] = [
   { href: "/membros/dashboard", label: "Início", icon: IconHome },
   { href: "/membros/aulas", label: "Aulas", icon: IconLessons },
+  { href: "/membros/anotacoes", label: "Anotações", icon: IconNotes },
   { href: "/membros/perfil", label: "Perfil", icon: IconProfile },
 ];
 

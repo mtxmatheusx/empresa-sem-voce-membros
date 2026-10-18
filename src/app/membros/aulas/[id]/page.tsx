@@ -57,7 +57,7 @@ export default async function AulaPage({
   );
 
   // Programa inteiro p/ navegação entre aulas e pilares
-  const [{ data: lessons }, { data: progress }] = await Promise.all([
+  const [{ data: lessons }, { data: progress }, { data: note }] = await Promise.all([
     supabase
       .from("lessons")
       .select("*")
@@ -65,6 +65,12 @@ export default async function AulaPage({
       .order("pillar_number")
       .order("order_in_pillar"),
     supabase.from("lesson_progress").select("*").eq("client_id", typedClient.id),
+    supabase
+      .from("lesson_notes")
+      .select("content, updated_at")
+      .eq("client_id", typedClient.id)
+      .eq("lesson_id", typedLesson.id)
+      .maybeSingle(),
   ]);
 
   const progressByLesson = new Map(
@@ -78,6 +84,7 @@ export default async function AulaPage({
         clientId={typedClient.id}
         allLessons={(lessons || []) as Lesson[]}
         progressByLesson={progressByLesson}
+        note={note}
       />
     </MembrosShell>
   );

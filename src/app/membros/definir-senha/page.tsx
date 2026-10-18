@@ -3,8 +3,8 @@
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
-import { Logo } from "@/components/ui/logo";
-import { Button } from "@/components/ui/button";
+import Link from "next/link";
+import { Check, KeyRound, ArrowRight } from "lucide-react";
 
 export default function DefinirSenhaPage() {
   const router = useRouter();
@@ -51,79 +51,83 @@ export default function DefinirSenhaPage() {
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center px-5 py-16 relative overflow-hidden">
-      <div className="esv-aura" />
-      <div className="w-full max-w-md relative z-10 anim-fade-up">
-        <div className="mb-12 text-center">
-          <Logo size="lg" showText={false} className="justify-center mb-8" />
-          <p className="t-eyebrow">Definir senha</p>
-        </div>
+    <div className="esv-auth">
+      <div className="esv-auth__glow" aria-hidden />
+      <div className="esv-auth__glow esv-auth__glow--2" aria-hidden />
 
-        {done ? (
-          <div className="card-elevated px-6 py-8 text-center">
-            <p className="font-serif italic text-[20px] text-[#F4F0E6] mb-2">
-              Senha definida!
-            </p>
-            <p className="text-[14px] text-[#A39E93]">Entrando na plataforma…</p>
-          </div>
-        ) : ready && !hasSession ? (
-          <div className="card-elevated px-6 py-8 text-center">
-            <p className="font-serif italic text-[20px] text-[#F4F0E6] mb-3">
-              Link inválido ou expirado
-            </p>
-            <p className="text-[14px] text-[#A39E93] mb-6">
-              Peça um novo link em &quot;Primeiro acesso ou esqueci a senha&quot;.
-            </p>
-            <a
-              href="/membros/login"
-              className="text-[14px] text-[#C9A227] hover:opacity-70"
-            >
-              Ir para o login →
-            </a>
-          </div>
-        ) : (
-          <form onSubmit={submit} className="space-y-6">
-            <div>
-              <label className="t-label block mb-3">Nova senha</label>
-              <input
-                type="password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                placeholder="Mínimo 8 caracteres"
-                required
-                autoComplete="new-password"
-                className="esv-input"
-              />
+      <div className="esv-auth__col">
+        <header className="esv-auth__head esv-rise">
+          <span className="esv-brand__mark esv-auth__logo">
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img src="/logo-esv-mark.png" alt="Empresa Sem Você" />
+          </span>
+          <p className="t-eyebrow">Área de membros</p>
+          <h1 className="esv-auth__title">
+            Defina sua <em>senha</em>
+          </h1>
+        </header>
+
+        <div className="esv-auth__card esv-glass esv-rise" style={{ "--d": 1 } as React.CSSProperties}>
+          {done ? (
+            <div className="esv-auth__sent">
+              <span className="esv-locked__icon">
+                <Check size={24} strokeWidth={2} />
+              </span>
+              <p className="esv-auth__h">Senha definida</p>
+              <p className="esv-auth__p">Entrando na plataforma…</p>
             </div>
-            <div>
-              <label className="t-label block mb-3">Confirmar senha</label>
-              <input
-                type="password"
-                value={confirm}
-                onChange={(e) => setConfirm(e.target.value)}
-                placeholder="Repita a senha"
-                required
-                autoComplete="new-password"
-                className="esv-input"
-              />
+          ) : ready && !hasSession ? (
+            <div className="esv-auth__sent">
+              <span className="esv-locked__icon">
+                <KeyRound size={24} strokeWidth={1.8} />
+              </span>
+              <p className="esv-auth__h">Link inválido ou expirado</p>
+              <p className="esv-auth__p">
+                Peça um novo link em &quot;Primeiro acesso ou esqueci a senha&quot;, na tela de login.
+              </p>
+              <Link href="/membros/login" className="esv-auth__alt is-gold">
+                Ir para o login
+              </Link>
             </div>
-
-            {error && (
-              <div
-                className="px-5 py-4 rounded-r-lg text-[13px] text-[#F4F0E6]"
-                style={{ borderLeft: "2px solid #E0736B", background: "rgba(224,115,107,0.08)" }}
-              >
-                {error}
-              </div>
-            )}
-
-            <div className="pt-2">
-              <Button type="submit" className="w-full" size="lg" disabled={loading}>
+          ) : (
+            <form onSubmit={submit} className="esv-auth__form">
+              <p className="esv-auth__p">Escolha uma senha só sua. Ela vale para os próximos acessos.</p>
+              <label className="esv-field">
+                <span>Nova senha</span>
+                <input
+                  type="password"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  placeholder="Mínimo 8 caracteres"
+                  required
+                  autoComplete="new-password"
+                  className="esv-input"
+                />
+              </label>
+              <label className="esv-field">
+                <span>Confirmar senha</span>
+                <input
+                  type="password"
+                  value={confirm}
+                  onChange={(e) => setConfirm(e.target.value)}
+                  placeholder="Repita a senha"
+                  required
+                  autoComplete="new-password"
+                  className="esv-input"
+                />
+              </label>
+              {error && (
+                <div className="esv-alert" role="alert">
+                  {error}
+                </div>
+              )}
+              <button type="submit" className="esv-btn esv-btn--block" disabled={loading || !ready}>
                 {loading ? "Salvando…" : "Definir senha e entrar"}
-              </Button>
-            </div>
-          </form>
-        )}
+                {!loading && <ArrowRight size={17} strokeWidth={2.2} />}
+              </button>
+            </form>
+          )}
+        </div>
       </div>
     </div>
   );

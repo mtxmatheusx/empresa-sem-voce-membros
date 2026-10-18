@@ -193,17 +193,32 @@ export function PillarNav({ items }: { items: { id: string; short: string; label
       .map((i) => document.getElementById(i.id))
       .filter(Boolean) as HTMLElement[];
     if (!sections.length) return;
-    const io = new IntersectionObserver(
-      (entries) => {
-        const vis = entries
-          .filter((e) => e.isIntersecting)
-          .sort((a, b) => a.boundingClientRect.top - b.boundingClientRect.top);
-        if (vis[0]) setActive(vis[0].target.id);
-      },
-      { rootMargin: "-30% 0px -55% 0px" }
-    );
-    sections.forEach((s) => io.observe(s));
-    return () => io.disconnect();
+    // ativo = última seção cujo topo já passou de 35% da altura da tela;
+    // no fim da página, a última seção
+    let raf = 0;
+    const pick = () => {
+      raf = 0;
+      const line = window.innerHeight * 0.35;
+      let cur = sections[0].id;
+      for (const s of sections) {
+        if (s.getBoundingClientRect().top <= line) cur = s.id;
+      }
+      const atEnd =
+        window.innerHeight + window.scrollY >= document.documentElement.scrollHeight - 4;
+      if (atEnd) cur = sections[sections.length - 1].id;
+      setActive((prev) => (prev === cur ? prev : cur));
+    };
+    const onScroll = () => {
+      if (!raf) raf = requestAnimationFrame(pick);
+    };
+    pick();
+    window.addEventListener("scroll", onScroll, { passive: true });
+    window.addEventListener("resize", onScroll);
+    return () => {
+      cancelAnimationFrame(raf);
+      window.removeEventListener("scroll", onScroll);
+      window.removeEventListener("resize", onScroll);
+    };
   }, [items]);
 
   // mantém o chip ativo visível quando a barra rola no celular
