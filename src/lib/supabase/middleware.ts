@@ -43,7 +43,14 @@ export async function updateSession(request: NextRequest) {
     return NextResponse.redirect(url);
   }
 
-  // Proteger rotas /membros (exceto landing /membros, /membros/login e /membros/auth/*)
+  // /membros não tem página própria: vai direto pro login ou pro Início
+  if (request.nextUrl.pathname === "/membros") {
+    const url = request.nextUrl.clone();
+    url.pathname = user ? "/membros/dashboard" : "/membros/login";
+    return NextResponse.redirect(url);
+  }
+
+  // Proteger rotas /membros (exceto /membros/login e /membros/auth/*)
   const membrosPath = request.nextUrl.pathname;
   const isMembrosProtected =
     membrosPath.startsWith("/membros") &&

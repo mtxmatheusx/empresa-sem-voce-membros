@@ -6,6 +6,9 @@ const DASHBOARD_HOSTS = [
   "dashboard.mtxestrategia.com.br",
 ];
 
+// endereço padrão da Vercel: raiz também abre a área de membros
+const MEMBERS_DEFAULT_HOSTS = ["empresa-sem-voce-membros.vercel.app"];
+
 const MEMBERS_HOSTS = [
   "membrosesv.mtxestrategia.com.br",
   "membros.mtxestrategia.com.br",
@@ -20,6 +23,12 @@ export async function middleware(request: NextRequest) {
   if (DASHBOARD_HOSTS.includes(host) && (pathname === "/" || pathname === "")) {
     const url = request.nextUrl.clone();
     url.pathname = "/admin/dashboard";
+    return NextResponse.redirect(url);
+  }
+
+  if (MEMBERS_DEFAULT_HOSTS.includes(host) && (pathname === "/" || pathname === "")) {
+    const url = request.nextUrl.clone();
+    url.pathname = "/membros";
     return NextResponse.redirect(url);
   }
 
