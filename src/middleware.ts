@@ -7,6 +7,7 @@ const DASHBOARD_HOSTS = [
 ];
 
 const MEMBERS_HOSTS = [
+  "membrosesv.mtxestrategia.com.br",
   "membros.mtxestrategia.com.br",
   "empresa-sem-voce-membros.mtxestrategia.com.br",
 ];
